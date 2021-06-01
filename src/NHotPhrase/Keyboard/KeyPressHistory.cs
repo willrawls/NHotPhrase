@@ -6,10 +6,11 @@ namespace NHotPhrase.Keyboard
 {
     public class KeyHistory : List<Keys>
     {
-        // public List<Keys> History { get; set; } = new();
         public DateTime LastPressAt { get; set; } = DateTime.MinValue;
         public int MaxHistoryLength { get; set; } = 8;
         public int ClearAfterThisManySeconds { get; set; } = 5;
+
+        public static object SyncRoot = new();
 
         public KeyHistory()
         {
@@ -46,7 +47,6 @@ namespace NHotPhrase.Keyboard
             return this;
         }
 
-        public static object SyncRoot = new();
         public List<Keys> KeyList()
         {
             lock (SyncRoot)

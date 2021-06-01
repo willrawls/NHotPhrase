@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Enum = System.Enum;
-
-namespace NHotPhrase.Keyboard
+﻿namespace NHotPhrase.Keyboard
 {
     public class SendKeyEntry
     {
