@@ -6,17 +6,19 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package properties">
-    <Authors>Thomas Levesque</Authors>
-    <PackageProjectUrl>https://github.com/thomaslevesque/NHotPhrase</PackageProjectUrl>
+    <Authors>William Rawls</Authors>
+    <PackageProjectUrl>https://github.com/willrawls/NHotPhrase</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageTags>global;hotkey;windows</PackageTags>
+    <PackageTags>global;hotkey;windows;keyboard;phrase;hotphrase;expansion</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
+  <!--
   <ItemGroup>
     <PackageReference Include="MinVer" Version="2.3.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
+  -->
 
 </Project>
