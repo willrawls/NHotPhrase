@@ -17,7 +17,7 @@ namespace NHotPhrase.Phrase
         public PhraseActions Actions { get; set; } = new();
 
 
-        public HotPhraseKeySequence(string name, Keys[] keys, EventHandler<HotPhraseEventArgs> hotPhraseEventArgs)
+        public HotPhraseKeySequence(string name, Keys[] keys, EventHandler<PhraseEventArgs> hotPhraseEventArgs)
         {
             Name = name;
             Sequence.AddRange(keys);
@@ -148,7 +148,7 @@ namespace NHotPhrase.Phrase
             return true;
         }
 
-        public HotPhraseKeySequence ThenCall(EventHandler<HotPhraseEventArgs> handler)
+        public HotPhraseKeySequence ThenCall(EventHandler<PhraseEventArgs> handler)
         {
             var sequence = new PhraseAction(this, handler);
             Actions.Add(sequence);

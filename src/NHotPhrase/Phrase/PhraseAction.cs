@@ -7,19 +7,19 @@ namespace NHotPhrase.Phrase
 {
     public class PhraseAction
     {
-        public HotPhraseKeySequence Parent;
-        public EventHandler<HotPhraseEventArgs> Handler;
-        public List<Keys> KeysToSend;
-        public int MillisecondPauseBetweenKeys = 2;
+        public HotPhraseKeySequence Parent { get; set; }
+        public EventHandler<PhraseEventArgs> Handler { get; set; }
+        public List<Keys> KeysToSend { get; set; }
+        public int MillisecondPauseBetweenKeys { get; set; } = 2;
 
-        public PhraseAction(HotPhraseKeySequence parent, EventHandler<HotPhraseEventArgs> handler = null)
+        public PhraseAction(HotPhraseKeySequence parent, EventHandler<PhraseEventArgs> handler = null)
         {
             Parent = parent;
             if (handler != null)
                 ThenCall(handler);
         }
 
-        public HotPhraseKeySequence ThenCall(EventHandler<HotPhraseEventArgs> handler)
+        public HotPhraseKeySequence ThenCall(EventHandler<PhraseEventArgs> handler)
         {
             Handler = handler;
             return Parent;
@@ -33,7 +33,7 @@ namespace NHotPhrase.Phrase
 
             if (Handler != null)
             {
-                var hotPhraseEventArgs = new HotPhraseEventArgs(this, phraseActionRunState, keysToSend);
+                var hotPhraseEventArgs = new PhraseEventArgs(this, phraseActionRunState, keysToSend);
                 Handler(this, hotPhraseEventArgs);
 
                 keysToSend = new List<Keys>();

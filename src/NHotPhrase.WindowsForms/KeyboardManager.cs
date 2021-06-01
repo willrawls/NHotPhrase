@@ -9,7 +9,7 @@ namespace NHotPhrase.WindowsForms
     public class KeyboardManager : IDisposable
     {
         public GlobalKeyboardHook Hook { get; set; }
-        public TriggerList Triggers { get; set; } = new();
+        public HotPhraseKeySequenceList HotPhraseKeySequences { get; set; } = new();
 
         public KeyboardManager CallThisEachTimeAKeyIsPressed(
             EventHandler<GlobalKeyboardHookEventArgs> keyEventHandler)
@@ -22,7 +22,7 @@ namespace NHotPhrase.WindowsForms
         }
 
         public KeyboardManager AddOrReplace(
-            EventHandler<HotPhraseEventArgs> hotPhraseEventArgs, 
+            EventHandler<PhraseEventArgs> hotPhraseEventArgs, 
             int wildcardCount, 
             WildcardMatchType matchType, 
             params Keys[] keys)
@@ -46,7 +46,7 @@ namespace NHotPhrase.WindowsForms
             return this;
         }
 
-        public KeyboardManager AddOrReplace(string name, Keys[] keys, EventHandler<HotPhraseEventArgs> hotPhraseEventArgs)
+        public KeyboardManager AddOrReplace(string name, Keys[] keys, EventHandler<PhraseEventArgs> hotPhraseEventArgs)
         {
             if (hotPhraseEventArgs == null)
                 throw new ArgumentNullException(nameof(hotPhraseEventArgs));
@@ -65,14 +65,14 @@ namespace NHotPhrase.WindowsForms
             if (hotPhraseKeySequence == null)
                 throw new ArgumentNullException(nameof(hotPhraseKeySequence));
 
-            var existingPhraseKeySequence = Triggers
+            var existingPhraseKeySequence = HotPhraseKeySequences
                 .FirstOrDefault(x => x.Name
                     .Equals(hotPhraseKeySequence.Name,
                         StringComparison.InvariantCultureIgnoreCase));
 
             if (existingPhraseKeySequence != null)
-                Triggers.Remove(existingPhraseKeySequence);
-            Triggers.Add(hotPhraseKeySequence);
+                HotPhraseKeySequences.Remove(existingPhraseKeySequence);
+            HotPhraseKeySequences.Add(hotPhraseKeySequence);
             return this;
         }
 

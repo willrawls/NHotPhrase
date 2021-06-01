@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace NHotPhrase.Phrase
 {
-    public class HotPhraseEventArgs : EventArgs
+    public class PhraseEventArgs : EventArgs
     {
         public bool Handled { get; set; }
         public PhraseAction Action { get; set; }
@@ -12,7 +12,7 @@ namespace NHotPhrase.Phrase
         public List<Keys> KeysToSend { get; set; }
         public string Name => State?.HotPhraseKeySequence?.Name;
 
-        public HotPhraseEventArgs(PhraseAction action, PhraseActionRunState state, List<Keys> keysToSend)
+        public PhraseEventArgs(PhraseAction action, PhraseActionRunState state, List<Keys> keysToSend)
         {
             Action = action;
             State = state;

@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
-using NHotPhrase.Phrase;
 
 namespace NHotPhrase.WindowsForms
 {
@@ -24,8 +23,7 @@ namespace NHotPhrase.WindowsForms
             {
                 Debug.WriteLine($"Key {e.KeyboardData.Key}");
                 History.AddKeyPress(e.KeyboardData.Key);
-                MatchResult matchResult;
-                var trigger = Keyboard.Triggers.FirstMatch(History, out matchResult);
+                var trigger = Keyboard.HotPhraseKeySequences.FirstMatch(History, out var matchResult);
                 if (trigger == null)
                     return;
 

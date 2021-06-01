@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using NHotPhrase.Keyboard;
-using NHotPhrase.Phrase;
 
-namespace NHotPhrase.WindowsForms
+namespace NHotPhrase.Phrase
 {
-    public class TriggerList : List<HotPhraseKeySequence>
+    public class HotPhraseKeySequenceList : List<HotPhraseKeySequence>
     {
         public static readonly object SyncRoot = new();
         public HotPhraseKeySequence FirstMatch(KeyHistory history, out MatchResult matchResult)

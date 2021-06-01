@@ -69,7 +69,7 @@ namespace NHotPhrase.WindowsForms.Demo
             Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 1, WildcardMatchType.Digits, Keys.CapsLock, Keys.CapsLock, Keys.N);
         }
 
-        private void OnWriteTextFromTextBox(object? sender, HotPhraseEventArgs e)
+        private void OnWriteTextFromTextBox(object? sender, PhraseEventArgs e)
         {
             SendKeyHelpers.SendBackspaces(3);
 
@@ -83,7 +83,7 @@ namespace NHotPhrase.WindowsForms.Demo
             }
         }
 
-        public static void OnWriteTextWithWildcards(object? sender, HotPhraseEventArgs e)
+        public static void OnWriteTextWithWildcards(object? sender, PhraseEventArgs e)
         {
             if (e.State.MatchResult == null)
                 return;
@@ -105,7 +105,7 @@ namespace NHotPhrase.WindowsForms.Demo
             }
         }
 
-        private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
+        private void OnTogglePhraseActivation(object sender, PhraseEventArgs e)
         {
             lock(SyncRoot)
             {
@@ -113,13 +113,13 @@ namespace NHotPhrase.WindowsForms.Demo
             }
         }
 
-        public void OnIncrement(object sender, HotPhraseEventArgs e)
+        public void OnIncrement(object sender, PhraseEventArgs e)
         {
             Value++;
             e.Handled = true;
         }
 
-        public void OnDecrement(object sender, HotPhraseEventArgs e)
+        public void OnDecrement(object sender, PhraseEventArgs e)
         {
             Value--;
             e.Handled = true;
