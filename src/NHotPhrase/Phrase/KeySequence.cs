@@ -36,6 +36,14 @@ namespace NHotPhrase.Phrase
             };
         }
 
+        public static KeySequence Factory()
+        {
+            return new()
+            {
+                Name = Guid.NewGuid().ToString()
+            };
+        }
+
         public KeySequence WhenKeyRepeats(Keys repeatKey, int repeatCount)
         {
             for (var i = 0; i < repeatCount; i++) Sequence.Add(repeatKey);

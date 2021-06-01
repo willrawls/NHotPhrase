@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.WindowsForms
 {
     public class HotPhraseManager : IDisposable
     {
-        public Form Parent { get; set; }
         public KeyboardManager Keyboard { get; set; }
         public KeyHistory History { get; set; } = new();
 
-        public HotPhraseManager(Form parent)
+        public HotPhraseManager()
         {
-            Parent = parent;
             Keyboard = KeyboardManager.Factory(OnManagerKeyboardPressEvent);
         }
 
-        public void OnManagerKeyboardPressEvent(object? sender, GlobalKeyboardHookEventArgs e)
+        public void OnManagerKeyboardPressEvent(object sender, GlobalKeyboardHookEventArgs e)
         {
             if (e.KeyboardState == KeyboardState.KeyUp)
             {

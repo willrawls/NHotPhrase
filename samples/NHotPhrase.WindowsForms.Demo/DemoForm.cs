@@ -24,11 +24,11 @@ namespace NHotPhrase.WindowsForms.Demo
         private void SetupHotPhrases()
         {
             Manager?.Dispose();
-            Manager = new HotPhraseManager(this);
+            Manager = new HotPhraseManager();
 
             Manager.Keyboard.AddOrReplace(
                 KeySequence
-                    .Named("Toggle phrase activation")
+                    .Named("Toggle hot phrase activation")
                     .WhenKeyRepeats(Keys.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
             );
@@ -59,14 +59,14 @@ namespace NHotPhrase.WindowsForms.Demo
             // Write some text plus any wildcards
             Manager.Keyboard.AddOrReplace(
                 KeySequence
-                    .Named("Write some text and wildcards")
+                    .Factory()                                             // <<< Name isn't necessary and defaults to a new Guid
                     .WhenKeysPressed(Keys.CapsLock, Keys.CapsLock, Keys.N) // <<< Specify the entire key sequence at once
-                    .FollowedByWildcards(WildcardMatchType.Digits, 1)      // <<< User must hit 1 and only 1 digit key to match
+                    .FollowedByWildcards(WildcardMatchType.Digits, 1)      // <<< User must press 0-9 one time and only one time to match
                     .ThenCall(OnWriteTextWithWildcards)                    // <<< That one digit passed to this function
             );
 
-            // Here's the equivalent in a single line call syntax
-            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 1, WildcardMatchType.Digits, Keys.CapsLock, Keys.CapsLock, Keys.N);
+            // Here's a near equivalent in a single line call syntax except any two a-Z or 0-9 characters match after the first static 3
+            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, Keys.CapsLock, Keys.CapsLock, Keys.M);
         }
 
         private void OnWriteTextFromTextBox(object? sender, PhraseEventArguments e)
@@ -92,15 +92,19 @@ namespace NHotPhrase.WindowsForms.Demo
             var wildcardsLength = wildcards?.Length ?? 0;
             if (wildcardsLength == 0) return;
             
-            SendKeyHelpers.SendBackspaces(2);
+            SendKeyHelpers.SendBackspaces(1 + e.State.MatchResult.Value.Length);
             $"Your wildcard is {wildcards}".SendString();
-            switch (e.State.MatchResult.ValueAsInt())
+            switch (e.State.MatchResult.Value.ToUpper())
             {
-                case 1:
+                case "1":
                     "\n\n\tThis is specific to wildcard 1\n\n".SendString();
                     break;
-                case 5:
+                case "5":
                     "\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n".SendString();
+                    break;
+
+                default:
+                    $"\n\n\t### Other\n- This is specific to any other wildcard\n- {e.State.MatchResult.Value}\n- ".SendString();
                     break;
             }
         }
@@ -146,7 +150,7 @@ namespace NHotPhrase.WindowsForms.Demo
             UpdateGlobalThingy(EnableGlobalHotkeysCheckBox.Checked);
         }
 
-        private void UpdateGlobalThingy(bool enableThingy)
+        private void UpdateGlobalThingy(bool enableThingy) // Safely setup/tear down hot phrases
         {
             if (UiChanging || !Monitor.TryEnter(SyncRoot)) return;
 
