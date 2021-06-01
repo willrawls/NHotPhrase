@@ -31,7 +31,9 @@ The code for this might look like
                     .ThenKeyPressed(Keys.R)
                     .ThenKeyPressed(Keys.G)
                     .ThenCall(OnWriteEmail)
-...                    
+<<
+Then when the user presses caps lock twice, then W, then R, then G the following code could be called
+>>
         private void OnWriteEmail(object? sender, HotPhraseEventArgs e)
         {
             // Since the user typed WRG, let's get rid of that
@@ -65,4 +67,46 @@ Maybe it's just me who wants to do this, but hey. I'd love to hear how you use t
 Thanks to NHotkey for the base code and layout. I changed a lot because there's a fundamentally different approach when clicking one key combination as opposed to a sequence of keys. 
 I tried to take care to make sure NHotKeys and NHotPhrases could exist side by side.
 
+### Wildcards
 
+A wildcard is 1 or more (optional) characters or numbers that must have been typed after the sequence. 
+
+For instance:
+
+>>
+            // Write some text plus any wildcards
+            Manager.Keyboard.AddOrReplace(
+                HotPhraseKeySequence
+                    .Named("Write some text and wildcards")
+                    .WhenKeysPressed(Keys.CapsLock, Keys.CapsLock, Keys.N)
+                    .FollowedByWildcards(WildcardMatchType.Digits, 1)
+                    .ThenCall(OnWriteTextWithWildcards)
+            );
+
+<<
+
+- User presses capslock twice, then the N key, then presses a single digit. The engine matches and calls the following code
+
+>>
+        public static void OnWriteTextWithWildcards(object? sender, HotPhraseEventArgs e)
+        {
+            if (e.State.MatchResult == null)
+                return;
+
+            var wildcards = e.State.MatchResult.Value;
+            var wildcardsLength = wildcards?.Length ?? 0;
+            if (wildcardsLength == 0) return;
+            
+            SendKeysKeyword.SendBackspaces(2);
+            $"Your wildcard is {wildcards}".SendString();
+            switch (e.State.MatchResult.ValueAsInt())
+            {
+                case 1:
+                    "\n\n\tThis is specific to wildcard 1\n\n".SendString();
+                    break;
+                case 5:
+                    "\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n".SendString();
+                    break;
+            }
+        }
+<<
