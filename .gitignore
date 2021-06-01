@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+
+TestResults/
+artifacts/
+
+_ReSharper.Caches/

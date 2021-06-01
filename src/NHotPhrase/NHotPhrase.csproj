@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net5.0-windows</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/willrawls/NHotPhrase</PackageProjectUrl>
+    <PackageTags>global;hotkey;windows;keyboard;hotphrase</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package properties">
+    <Description>A managed library to handle globally availble "hot phrases" in Windows Forms. NOTE: this package doesn't contain a concrete HotkeyManager implementation; you should add NHotPhrase.WindowsForms package to get one.</Description>
+    <Version>0.2.0</Version>
+    <Authors>William Rawls</Authors>
+    <Company>William Rawls</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="HotPhraseManagerBase.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\System.Windows.Forms.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
