@@ -18,7 +18,7 @@ namespace NHotPhrase.WindowsForms.Tests
         public void RControl3Times_IsAMatch_True()
         {
             var callCount = 0;
-            var data = new HotPhraseKeySequence("Fred", RControl3Times, (sender, args) =>
+            var data = new KeySequence("Fred", RControl3Times, (sender, args) =>
             {
                 callCount++;
                 args.Handled = true;
@@ -39,7 +39,7 @@ namespace NHotPhrase.WindowsForms.Tests
         [TestMethod]
         public void Shift3Times3Times_IsAMatch_True()
         {
-            var data = new HotPhraseKeySequence("Fred", Shift3Times, (sender, args) => args.Handled = true);
+            var data = new KeySequence("Fred", Shift3Times, (sender, args) => args.Handled = true);
 
             var history = new List<Keys>
             {
@@ -58,7 +58,7 @@ namespace NHotPhrase.WindowsForms.Tests
         public void RControl3Times_IsAMatch_True_WhenMoreThan3EntriesInHistory()
         {
             var callCount = 0;
-            var data = new HotPhraseKeySequence("Fred", RControl3Times, (sender, args) =>
+            var data = new KeySequence("Fred", RControl3Times, (sender, args) =>
             {
                 callCount++;
                 args.Handled = true;
@@ -82,7 +82,7 @@ namespace NHotPhrase.WindowsForms.Tests
         public void RControl3Times_IsAMatch_False_Simple()
         {
             var callCount = 0;
-            var data = new HotPhraseKeySequence("Fred", RControl3Times, (sender, args) =>
+            var data = new KeySequence("Fred", RControl3Times, (sender, args) =>
             {
                 callCount++;
                 args.Handled = true;
@@ -104,7 +104,7 @@ namespace NHotPhrase.WindowsForms.Tests
         public void RControl3Times_IsAMatch_False_NotEnoughKeys()
         {
             var callCount = 0;
-            var data = new HotPhraseKeySequence("Fred", RControl3Times, (sender, args) =>
+            var data = new KeySequence("Fred", RControl3Times, (sender, args) =>
             {
                 callCount++;
                 args.Handled = true;
@@ -198,7 +198,7 @@ namespace NHotPhrase.WindowsForms.Tests
 
         public static void TestSequence(List<Keys> simulatedHistory, List<Keys> sequence, bool expected)
         {
-            var hotPhraseKeySequence = new HotPhraseKeySequence("Fred", sequence.ToArray(), (sender, args) => args.Handled = true);
+            var hotPhraseKeySequence = new KeySequence("Fred", sequence.ToArray(), (sender, args) => args.Handled = true);
             var keyHistory = new KeyHistory(8, 8, DateTime.Now, simulatedHistory.ToList());
             var actual = hotPhraseKeySequence.IsAMatch(keyHistory, out var wildcards);
             if (actual && !expected)

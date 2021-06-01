@@ -5,7 +5,7 @@ using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.Phrase
 {
-    public class HotPhraseKeySequence
+    public class KeySequence
     {
         public string Name { get; set; }
 
@@ -14,21 +14,21 @@ namespace NHotPhrase.Phrase
         public WildcardMatchType WildcardMatchType { get; set; }
         public int WildcardCount { get; set; }
         
-        public PhraseActions Actions { get; set; } = new();
+        public PhraseActionList ActionList { get; set; } = new();
 
 
-        public HotPhraseKeySequence(string name, Keys[] keys, EventHandler<PhraseEventArgs> hotPhraseEventArgs)
+        public KeySequence(string name, Keys[] keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
         {
             Name = name;
             Sequence.AddRange(keys);
             ThenCall(hotPhraseEventArgs);
         }
 
-        public HotPhraseKeySequence()
+        public KeySequence()
         {
         }
 
-        public static HotPhraseKeySequence Named(string name)
+        public static KeySequence Named(string name)
         {
             return new()
             {
@@ -36,19 +36,19 @@ namespace NHotPhrase.Phrase
             };
         }
 
-        public HotPhraseKeySequence WhenKeyRepeats(Keys repeatKey, int repeatCount)
+        public KeySequence WhenKeyRepeats(Keys repeatKey, int repeatCount)
         {
             for (var i = 0; i < repeatCount; i++) Sequence.Add(repeatKey);
             return this;
         }
 
-        public HotPhraseKeySequence WhenKeyReleased(Keys key)
+        public KeySequence WhenKeyReleased(Keys key)
         {
             Sequence.Add(key);
             return this;
         }
 
-        public HotPhraseKeySequence WhenKeysReleased(IList<Keys> keys)
+        public KeySequence WhenKeysReleased(IList<Keys> keys)
         {
             Sequence.AddRange(keys);
             return this;
@@ -57,7 +57,7 @@ namespace NHotPhrase.Phrase
         public bool Run(MatchResult matchResult)
         {
             var state = new PhraseActionRunState(this, matchResult);
-            foreach (var action in Actions)
+            foreach (var action in ActionList)
             {
                 if (!action.RunNow(state))
                     return false;
@@ -148,34 +148,34 @@ namespace NHotPhrase.Phrase
             return true;
         }
 
-        public HotPhraseKeySequence ThenCall(EventHandler<PhraseEventArgs> handler)
+        public KeySequence ThenCall(EventHandler<PhraseEventArguments> handler)
         {
             var sequence = new PhraseAction(this, handler);
-            Actions.Add(sequence);
+            ActionList.Add(sequence);
             return this;
         }
 
-        public HotPhraseKeySequence WhenKeyPressed(Keys key)
+        public KeySequence WhenKeyPressed(Keys key)
         {
             Sequence.Clear();
             Sequence.Add(key);
             return this;
         }
 
-        public HotPhraseKeySequence WhenKeysPressed(params Keys[] keys)
+        public KeySequence WhenKeysPressed(params Keys[] keys)
         {
             Sequence.Clear();
             Sequence.AddRange(keys);
             return this;
         }
 
-        public HotPhraseKeySequence ThenKeyPressed(Keys key)
+        public KeySequence ThenKeyPressed(Keys key)
         {
             Sequence.Add(key);
             return this;
         }
 
-        public HotPhraseKeySequence FollowedByWildcards(WildcardMatchType wildcardMatchType, int wildcardCount)
+        public KeySequence FollowedByWildcards(WildcardMatchType wildcardMatchType, int wildcardCount)
         {
             WildcardMatchType = wildcardMatchType;
             WildcardCount = wildcardCount;

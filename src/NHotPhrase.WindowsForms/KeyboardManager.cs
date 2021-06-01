@@ -9,7 +9,7 @@ namespace NHotPhrase.WindowsForms
     public class KeyboardManager : IDisposable
     {
         public GlobalKeyboardHook Hook { get; set; }
-        public HotPhraseKeySequenceList HotPhraseKeySequences { get; set; } = new();
+        public KeySequenceList KeySequences { get; set; } = new();
 
         public KeyboardManager CallThisEachTimeAKeyIsPressed(
             EventHandler<GlobalKeyboardHookEventArgs> keyEventHandler)
@@ -22,7 +22,7 @@ namespace NHotPhrase.WindowsForms
         }
 
         public KeyboardManager AddOrReplace(
-            EventHandler<PhraseEventArgs> hotPhraseEventArgs, 
+            EventHandler<PhraseEventArguments> hotPhraseEventArgs, 
             int wildcardCount, 
             WildcardMatchType matchType, 
             params Keys[] keys)
@@ -33,7 +33,7 @@ namespace NHotPhrase.WindowsForms
             if (keys == null || keys.Length == 0)
                 throw new ArgumentNullException(nameof(keys));
 
-            var hotPhraseKeySequence = new HotPhraseKeySequence(Guid.NewGuid().ToString(), keys, hotPhraseEventArgs);
+            var hotPhraseKeySequence = new KeySequence(Guid.NewGuid().ToString(), keys, hotPhraseEventArgs);
 
             if (wildcardCount > 0 && matchType != WildcardMatchType.None && matchType != WildcardMatchType.Unknown)
             {
@@ -46,7 +46,7 @@ namespace NHotPhrase.WindowsForms
             return this;
         }
 
-        public KeyboardManager AddOrReplace(string name, Keys[] keys, EventHandler<PhraseEventArgs> hotPhraseEventArgs)
+        public KeyboardManager AddOrReplace(string name, Keys[] keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
         {
             if (hotPhraseEventArgs == null)
                 throw new ArgumentNullException(nameof(hotPhraseEventArgs));
@@ -57,22 +57,22 @@ namespace NHotPhrase.WindowsForms
             if (string.IsNullOrEmpty(name))
                 name = Guid.NewGuid().ToString();
 
-            return AddOrReplace(new HotPhraseKeySequence(name, keys, hotPhraseEventArgs));
+            return AddOrReplace(new KeySequence(name, keys, hotPhraseEventArgs));
         }
 
-        public KeyboardManager AddOrReplace(HotPhraseKeySequence hotPhraseKeySequence)
+        public KeyboardManager AddOrReplace(KeySequence keySequence)
         {
-            if (hotPhraseKeySequence == null)
-                throw new ArgumentNullException(nameof(hotPhraseKeySequence));
+            if (keySequence == null)
+                throw new ArgumentNullException(nameof(keySequence));
 
-            var existingPhraseKeySequence = HotPhraseKeySequences
+            var existingPhraseKeySequence = KeySequences
                 .FirstOrDefault(x => x.Name
-                    .Equals(hotPhraseKeySequence.Name,
+                    .Equals(keySequence.Name,
                         StringComparison.InvariantCultureIgnoreCase));
 
             if (existingPhraseKeySequence != null)
-                HotPhraseKeySequences.Remove(existingPhraseKeySequence);
-            HotPhraseKeySequences.Add(hotPhraseKeySequence);
+                KeySequences.Remove(existingPhraseKeySequence);
+            KeySequences.Add(keySequence);
             return this;
         }
 

@@ -2,12 +2,12 @@
 {
     public class MatchResult
     {
-        public HotPhraseKeySequence HotPhraseKeySequence { get; set; }
+        public KeySequence KeySequence { get; set; }
         public string Value { get; set; }
 
-        public MatchResult(HotPhraseKeySequence hotPhraseKeySequence, string value)
+        public MatchResult(KeySequence keySequence, string value)
         {
-            HotPhraseKeySequence = hotPhraseKeySequence;
+            KeySequence = keySequence;
             Value = value;
         }
 

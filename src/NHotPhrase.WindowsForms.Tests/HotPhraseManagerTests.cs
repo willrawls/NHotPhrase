@@ -40,12 +40,12 @@ namespace NHotPhrase.WindowsForms.Tests
             Assert.AreEqual(3, callCount);
         }
 
-        private static KeyboardManager SetupHotPhraseManagerTest(out HotPhraseKeySequence hotPhrase)
+        private static KeyboardManager SetupHotPhraseManagerTest(out KeySequence hotPhrase)
         {
             var keys = new[] {Keys.ControlKey, Keys.ControlKey, Keys.ControlKey};
 
-            void hotPhraseEventArgs(object? _, PhraseEventArgs e) => e.Handled = true;
-            hotPhrase = new HotPhraseKeySequence("RightControl3TimesInARow", keys, hotPhraseEventArgs);
+            void hotPhraseEventArgs(object? _, PhraseEventArguments e) => e.Handled = true;
+            hotPhrase = new KeySequence("RightControl3TimesInARow", keys, hotPhraseEventArgs);
 
             void HotGlobalKeyboardHookEventArgs(object? _, GlobalKeyboardHookEventArgs e) => e.Handled = true;
             var hotPhraseManager = KeyboardManager.Factory(HotGlobalKeyboardHookEventArgs);
@@ -60,15 +60,15 @@ namespace NHotPhrase.WindowsForms.Tests
         {
             var hotPhraseManager = SetupHotPhraseManagerTest(out var hotPhrase);
             
-            Assert.IsNotNull(hotPhraseManager.HotPhraseKeySequences[0].Sequence);
-            Assert.AreEqual(3, hotPhraseManager.HotPhraseKeySequences[0].Sequence.Count);
-            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.HotPhraseKeySequences[0].Sequence[0]);
-            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.HotPhraseKeySequences[0].Sequence[1]);
-            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.HotPhraseKeySequences[0].Sequence[2]);
+            Assert.IsNotNull(hotPhraseManager.KeySequences[0].Sequence);
+            Assert.AreEqual(3, hotPhraseManager.KeySequences[0].Sequence.Count);
+            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.KeySequences[0].Sequence[0]);
+            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.KeySequences[0].Sequence[1]);
+            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.KeySequences[0].Sequence[2]);
             
-            Assert.IsNotNull(hotPhraseManager.HotPhraseKeySequences[0].Actions[0].Handler);
-            var hotPhraseEventArgs = new PhraseEventArgs(null, null, null);
-            hotPhraseManager.HotPhraseKeySequences[0].Actions[0].Handler(null, hotPhraseEventArgs);
+            Assert.IsNotNull(hotPhraseManager.KeySequences[0].ActionList[0].Handler);
+            var hotPhraseEventArgs = new PhraseEventArguments(null, null, null);
+            hotPhraseManager.KeySequences[0].ActionList[0].Handler(null, hotPhraseEventArgs);
             Assert.IsTrue(hotPhraseEventArgs.Handled);
         }
     }

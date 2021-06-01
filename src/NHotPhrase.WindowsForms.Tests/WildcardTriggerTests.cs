@@ -13,7 +13,7 @@ namespace NHotPhrase.WindowsForms.Tests
         [TestMethod]
         public void ShiftShiftAnySingleDigit_IsAMatch_True()
         {
-            var data = new HotPhraseKeySequence("Fred",
+            var data = new KeySequence("Fred",
                     new[] {Keys.Shift, Keys.Shift}, (sender, args) => args.Handled = true)
                 .FollowedByWildcards(WildcardMatchType.Digits, 1);
 

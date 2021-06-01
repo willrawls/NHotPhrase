@@ -2,7 +2,7 @@
 
 namespace NHotPhrase.Phrase
 {
-    public class PhraseActions : List<PhraseAction>
+    public class PhraseActionList : List<PhraseAction>
     {
     }
 }

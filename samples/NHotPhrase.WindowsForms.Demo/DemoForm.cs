@@ -27,14 +27,14 @@ namespace NHotPhrase.WindowsForms.Demo
             Manager = new HotPhraseManager(this);
 
             Manager.Keyboard.AddOrReplace(
-                HotPhraseKeySequence
+                KeySequence
                     .Named("Toggle phrase activation")
                     .WhenKeyRepeats(Keys.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
             );
 
             Manager.Keyboard.AddOrReplace(
-                HotPhraseKeySequence
+                KeySequence
                     .Named("Increment")
                     .WhenKeyPressed(Keys.ControlKey)
                     .ThenKeyPressed(Keys.Shift)
@@ -47,7 +47,7 @@ namespace NHotPhrase.WindowsForms.Demo
 
             // Or spell it out
             Manager.Keyboard.AddOrReplace(
-                HotPhraseKeySequence
+                KeySequence
                     .Named("Write some text")
                     .WhenKeyRepeats(Keys.CapsLock, 2)   // <<< User must press the caps lock key twice
                     .ThenKeyPressed(Keys.W)             // <<<   then a W, a R and a G must be pressed
@@ -58,7 +58,7 @@ namespace NHotPhrase.WindowsForms.Demo
 
             // Write some text plus any wildcards
             Manager.Keyboard.AddOrReplace(
-                HotPhraseKeySequence
+                KeySequence
                     .Named("Write some text and wildcards")
                     .WhenKeysPressed(Keys.CapsLock, Keys.CapsLock, Keys.N) // <<< Specify the entire key sequence at once
                     .FollowedByWildcards(WildcardMatchType.Digits, 1)      // <<< User must hit 1 and only 1 digit key to match
@@ -69,7 +69,7 @@ namespace NHotPhrase.WindowsForms.Demo
             Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 1, WildcardMatchType.Digits, Keys.CapsLock, Keys.CapsLock, Keys.N);
         }
 
-        private void OnWriteTextFromTextBox(object? sender, PhraseEventArgs e)
+        private void OnWriteTextFromTextBox(object? sender, PhraseEventArguments e)
         {
             SendKeyHelpers.SendBackspaces(3);
 
@@ -83,7 +83,7 @@ namespace NHotPhrase.WindowsForms.Demo
             }
         }
 
-        public static void OnWriteTextWithWildcards(object? sender, PhraseEventArgs e)
+        public static void OnWriteTextWithWildcards(object? sender, PhraseEventArguments e)
         {
             if (e.State.MatchResult == null)
                 return;
@@ -105,7 +105,7 @@ namespace NHotPhrase.WindowsForms.Demo
             }
         }
 
-        private void OnTogglePhraseActivation(object sender, PhraseEventArgs e)
+        private void OnTogglePhraseActivation(object sender, PhraseEventArguments e)
         {
             lock(SyncRoot)
             {
@@ -113,13 +113,13 @@ namespace NHotPhrase.WindowsForms.Demo
             }
         }
 
-        public void OnIncrement(object sender, PhraseEventArgs e)
+        public void OnIncrement(object sender, PhraseEventArguments e)
         {
             Value++;
             e.Handled = true;
         }
 
-        public void OnDecrement(object sender, PhraseEventArgs e)
+        public void OnDecrement(object sender, PhraseEventArguments e)
         {
             Value--;
             e.Handled = true;

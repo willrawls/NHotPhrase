@@ -23,7 +23,7 @@ namespace NHotPhrase.WindowsForms
             {
                 Debug.WriteLine($"Key {e.KeyboardData.Key}");
                 History.AddKeyPress(e.KeyboardData.Key);
-                var trigger = Keyboard.HotPhraseKeySequences.FirstMatch(History, out var matchResult);
+                var trigger = Keyboard.KeySequences.FirstMatch(History, out var matchResult);
                 if (trigger == null)
                     return;
 
