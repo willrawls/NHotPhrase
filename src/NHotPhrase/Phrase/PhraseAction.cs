@@ -45,7 +45,7 @@ namespace NHotPhrase.Phrase
                 return true;
 
             foreach (var key in KeysToSend)
-                SendKeys.SendWait(SendKeysKeyword.KeyToSendKey(key));
+                SendKeys.SendWait(key.KeyToSendKeyText());
 
             return true;
         }

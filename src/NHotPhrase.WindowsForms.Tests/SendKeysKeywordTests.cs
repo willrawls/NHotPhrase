@@ -57,23 +57,23 @@ namespace NHotPhrase.WindowsForms.Tests
         [TestMethod]
         public void ShouldBeSimplified_True()
         {
-            Assert.IsTrue(SendKeysKeyword.ShouldBeSimplified(Keys.Shift));
-            Assert.IsTrue(SendKeysKeyword.ShouldBeSimplified(Keys.Control));
-            Assert.IsTrue(SendKeysKeyword.ShouldBeSimplified(Keys.ShiftKey));
-            Assert.IsTrue(SendKeysKeyword.ShouldBeSimplified(Keys.ControlKey));
-            Assert.IsTrue(SendKeysKeyword.ShouldBeSimplified(Keys.Alt));
-            Assert.IsTrue(SendKeysKeyword.ShouldBeSimplified(Keys.LWin));
-            Assert.IsTrue(SendKeysKeyword.ShouldBeSimplified(Keys.D5));
+            Assert.IsTrue(Keys.Shift.ShouldBeSimplified());
+            Assert.IsTrue(Keys.Control.ShouldBeSimplified());
+            Assert.IsTrue(Keys.ShiftKey.ShouldBeSimplified());
+            Assert.IsTrue(Keys.ControlKey.ShouldBeSimplified());
+            Assert.IsTrue(Keys.Alt.ShouldBeSimplified());
+            Assert.IsTrue(Keys.LWin.ShouldBeSimplified());
+            Assert.IsTrue(Keys.D5.ShouldBeSimplified());
         }
 
         [TestMethod]
         public void ShouldBeSimplified_False()
         {
-            Assert.IsFalse(SendKeysKeyword.ShouldBeSimplified(Keys.A));
-            Assert.IsFalse(SendKeysKeyword.ShouldBeSimplified(Keys.Enter));
-            Assert.IsFalse(SendKeysKeyword.ShouldBeSimplified(Keys.NumPad0));
-            Assert.IsFalse(SendKeysKeyword.ShouldBeSimplified(Keys.Home));
-            Assert.IsFalse(SendKeysKeyword.ShouldBeSimplified(Keys.LMenu));
+            Assert.IsFalse(Keys.A.ShouldBeSimplified());
+            Assert.IsFalse(Keys.Enter.ShouldBeSimplified());
+            Assert.IsFalse(Keys.NumPad0.ShouldBeSimplified());
+            Assert.IsFalse(Keys.Home.ShouldBeSimplified());
+            Assert.IsFalse(Keys.LMenu.ShouldBeSimplified());
         }
 
         /*
@@ -100,19 +100,19 @@ namespace NHotPhrase.WindowsForms.Tests
         [TestMethod]
         public void IsAMatch_WhenTheSame_True()
         {
-            Assert.IsTrue(SendKeysKeyword.IsAMatch(Keys.A, Keys.A));
+            Assert.IsTrue(Keys.A.IsAMatch(Keys.A));
         }
 
         [TestMethod]
         public void IsAMatch_WhenSimilar_True()
         {
-            Assert.IsTrue(SendKeysKeyword.IsAMatch(Keys.Control, Keys.RControlKey));
+            Assert.IsTrue(Keys.Control.IsAMatch(Keys.RControlKey));
         }
 
         [TestMethod]
         public void IsAMatch_WhenSimilar_False()
         {
-            Assert.IsFalse(SendKeysKeyword.IsAMatch(Keys.RControlKey, Keys.ControlKey));
+            Assert.IsFalse(Keys.RControlKey.IsAMatch(Keys.ControlKey));
         }
     }
 }

@@ -81,7 +81,7 @@ namespace NHotPhrase.Phrase
 
             for (var i = 0; i < Sequence.Count; i++)
             {
-                if (!SendKeysKeyword.IsAMatch(Sequence[i], possibleMatchRange[i]))
+                if (!Sequence[i].IsAMatch(possibleMatchRange[i]))
                     return false;
             }
 

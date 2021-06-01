@@ -205,9 +205,9 @@ namespace NHotPhrase.WindowsForms.Tests
             if (actual && !expected)
             {
                 // Check the last to see if it's a simplified, if so, actual == expected
-                if (SendKeysKeyword.ShouldBeSimplified(sequence[0]))
+                if (sequence[0].ShouldBeSimplified())
                 {
-                    if (SendKeysKeyword.IsAMatch(sequence[0], keyHistory[^1]))
+                    if (sequence[0].IsAMatch(keyHistory[^1]))
                     {
                         // It's all good
                         actual = expected;
@@ -232,7 +232,7 @@ namespace NHotPhrase.WindowsForms.Tests
                 KeysToNotGenerateRandomly = new List<Keys>();
                 var keysEnumValues = KeysEnumValues();
                 foreach (Keys key in keysEnumValues)
-                    if(SendKeysKeyword.ShouldBeSimplified(key))
+                    if(key.ShouldBeSimplified())
                         KeysToNotGenerateRandomly.Add(key);
             }
 

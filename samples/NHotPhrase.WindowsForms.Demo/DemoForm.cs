@@ -44,46 +44,36 @@ namespace NHotPhrase.WindowsForms.Demo
                     .ThenCall(OnIncrement)
             );
 
-            // Spell it out long hand
-            /*
-            Manager.Keyboard.AddOrReplace(
-                HotPhraseKeySequence
-                    .Named("Decrement")
-                    .WhenKeyPressed(Keys.CapsLock)
-                    .ThenKeyPressed(Keys.CapsLock)
-                    .ThenKeyPressed(Keys.D)
-                    .ThenKeyPressed(Keys.Back)
-                    .ThenCall(OnDecrement)
-            );
-            */
-            // Or use the NHotkey like syntax 
+            // Use the NHotkey like syntax if you like
             Manager.Keyboard.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
 
-            // Write some text
+            // Or spell it out
             Manager.Keyboard.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Write some text")
-                    .WhenKeyPressed(Keys.CapsLock)
-                    .ThenKeyPressed(Keys.CapsLock)
-                    .ThenKeyPressed(Keys.W)
+                    .WhenKeyRepeats(Keys.CapsLock, 2)   // <<< User must press the caps lock key twice
+                    .ThenKeyPressed(Keys.W)             // <<<   then a W, a R and a G must be pressed
                     .ThenKeyPressed(Keys.R)
                     .ThenKeyPressed(Keys.G)
-                    .ThenCall(OnWriteTextFromTextBox)
+                    .ThenCall(OnWriteTextFromTextBox)   // <<< When that happens, this function is called
             );
 
             // Write some text plus any wildcards
             Manager.Keyboard.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Write some text and wildcards")
-                    .WhenKeysPressed(Keys.CapsLock, Keys.CapsLock, Keys.N)
-                    .FollowedByWildcards(WildcardMatchType.Digits, 1)
-                    .ThenCall(OnWriteTextWithWildcards)
+                    .WhenKeysPressed(Keys.CapsLock, Keys.CapsLock, Keys.N) // <<< Specify the entire key sequence at once
+                    .FollowedByWildcards(WildcardMatchType.Digits, 1)      // <<< User must hit 1 and only 1 digit key to match
+                    .ThenCall(OnWriteTextWithWildcards)                    // <<< That one digit passed to this function
             );
+
+            // Here's the equivalent in a single line call syntax
+            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 1, WildcardMatchType.Digits, Keys.CapsLock, Keys.CapsLock, Keys.N);
         }
 
         private void OnWriteTextFromTextBox(object? sender, HotPhraseEventArgs e)
         {
-            SendKeysKeyword.SendBackspaces(3);
+            SendKeyHelpers.SendBackspaces(3);
 
             var textPartsToSend = TextToSend.Text.MakeReadyForSendKeys();
             if (textPartsToSend.Count <= 0) return;
@@ -104,7 +94,7 @@ namespace NHotPhrase.WindowsForms.Demo
             var wildcardsLength = wildcards?.Length ?? 0;
             if (wildcardsLength == 0) return;
             
-            SendKeysKeyword.SendBackspaces(2);
+            SendKeyHelpers.SendBackspaces(2);
             $"Your wildcard is {wildcards}".SendString();
             switch (e.State.MatchResult.ValueAsInt())
             {
