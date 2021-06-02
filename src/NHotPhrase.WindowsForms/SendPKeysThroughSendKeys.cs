@@ -8,11 +8,9 @@ namespace NHotPhrase.WindowsForms
 {
     public class SendPKeysThroughSendKeys : ISendKeys
     {
-        public int MillisecondsBetweenKeyPress { get; set; } = 2;
-
-        private SendPKeysThroughSendKeys()
+        static SendPKeysThroughSendKeys()
         {
-            ForSendingKeys.Singleton = this;
+            SendPKeys.Singleton = new SendPKeysThroughSendKeys();
         }
 
         public bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keysToSend)
@@ -20,11 +18,11 @@ namespace NHotPhrase.WindowsForms
             if (keysToSend is not {Count: > 0}) 
                 return true;
             foreach (var key in keysToSend)
-                SendKeys.SendWait(key.KeyToSendKeyText());
+                SendKeys.SendWait(key.PKeyToSendKeysText());
             return true;
         }
 
-        public bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep = 2)
+        public bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep)
         {
             SendKeys.SendWait(stringToSend);
             if(millisecondThreadSleep > 0)
@@ -32,14 +30,11 @@ namespace NHotPhrase.WindowsForms
             return true;
         }
 
-        public bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep = 2)
+        public bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep)
         {
             foreach (var part in stringsToSend) 
                 SendKeysAndWait(part, 2);
             return true;
         }
-
-        private static ISendKeys _singleton;
-        public static ISendKeys Singleton => _singleton ??= new SendPKeysThroughSendKeys();
     }
 }

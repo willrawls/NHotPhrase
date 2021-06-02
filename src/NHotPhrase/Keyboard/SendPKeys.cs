@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NHotPhrase.Keyboard
 {
-    public static class ForSendingKeys
+    public static class SendPKeys
     {
         private static ISendKeys _singleton;
         public static ISendKeys Singleton
@@ -18,7 +18,7 @@ namespace NHotPhrase.Keyboard
             set => _singleton = value;
         }
 
-        public static string KeyToSendKeyText(this PKey pKey)
+        public static string PKeyToSendKeysText(this PKey pKey)
         {
             var keyword = SendKeyEntries.FirstOrDefault(k => k.Number == (int) pKey);
             return keyword != null 
@@ -26,7 +26,7 @@ namespace NHotPhrase.Keyboard
                 : pKey.ToString();
         }
 
-        public static void SendBackspaces(int backspaceCount)
+        public static void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
         {
             var toSend = "";
             for (var i = 0; i < backspaceCount; i++)
@@ -34,7 +34,7 @@ namespace NHotPhrase.Keyboard
                 toSend += "{BACKSPACE}";
             }
 
-            Singleton.SendKeysAndWait(toSend);
+            Singleton.SendKeysAndWait(toSend, millisecondsBetweenKeys);
         }
 
         public static List<string> MakeReadyForSending(this string target, int splitLength = 8)
@@ -52,30 +52,29 @@ namespace NHotPhrase.Keyboard
             {
                 for (var i = 0; i < list.Count; i++)
                 {
-                    if (list[i].Length > splitLength)
-                    {
-                        var pieces = list[i].SplitInTwo();
-                        list.RemoveAt(i);
-                        list.InsertRange(i, pieces);
-                    }
+                    if (list[i].Length <= splitLength) continue;
+
+                    var pieces = list[i].SplitInTwo();
+                    list.RemoveAt(i);
+                    list.InsertRange(i, pieces);
                 }
             }   
             return list;
         }
 
-        public static void SendString(this string textToSend)
+        public static void SendString(this string textToSend, int millisecondsBetweenKeys = 2)
         {
             var textParts = textToSend.MakeReadyForSending();
-            textParts.SendStrings();
+            textParts.SendStrings(millisecondsBetweenKeys);
         }
 
-        public static void SendStrings(this IList<string> textPartsToSend)
+        public static void SendStrings(this IList<string> textPartsToSend, int millisecondsBetweenKeys = 2)
         {
             if (textPartsToSend.Count <= 0) return;
 
             foreach (var part in textPartsToSend)
             {
-                Singleton.SendKeysAndWait(part);
+                Singleton.SendKeysAndWait(part, millisecondsBetweenKeys);
             }
         }
 

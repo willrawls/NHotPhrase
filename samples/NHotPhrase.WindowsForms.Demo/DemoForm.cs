@@ -7,7 +7,6 @@ namespace NHotPhrase.WindowsForms.Demo
 {
     public partial class DemoForm : Form
     {
-        public int Value;
 
         public HotPhraseManager Manager { get; set; }
         public static object SyncRoot = new();
@@ -71,12 +70,12 @@ namespace NHotPhrase.WindowsForms.Demo
 
         private void OnWriteTextFromTextBox(object? sender, PhraseEventArguments e)
         {
-            ForSendingKeys.SendBackspaces(3);
+            SendPKeys.SendBackspaces(3);
 
             var textPartsToSend = TextToSend.Text.MakeReadyForSending();
             if (textPartsToSend.Count <= 0) return;
 
-            SendPKeysThroughSendKeys.Singleton.SendKeysAndWait(textPartsToSend, 2);
+            SendPKeys.Singleton.SendKeysAndWait(textPartsToSend, 2);
         }
 
         public static void OnWriteTextWithWildcards(object? sender, PhraseEventArguments e)
@@ -90,7 +89,7 @@ namespace NHotPhrase.WindowsForms.Demo
             if (wildcardsLength == 0) return;
             
             // Send enough backspaces to cover the extra keys typed during the match
-            ForSendingKeys.SendBackspaces(1 + e.State.MatchResult.Value.Length);
+            SendPKeys.SendBackspaces(1 + e.State.MatchResult.Value.Length);
 
             // Send some strings based on the wildcard character(s)
             $"Your wildcard is {wildcards}".SendString();
@@ -129,13 +128,14 @@ namespace NHotPhrase.WindowsForms.Demo
             e.Handled = true;
         }
 
+        public int _value;
         public int Value
         {
-            get => Balue;
+            get => Value;
             set
             {
-                Balue = value;
-                lblValue.Text = Balue.ToString();
+                Value = value;
+                lblValue.Text = Value.ToString();
             }
         }
 

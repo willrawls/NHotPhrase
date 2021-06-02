@@ -30,9 +30,11 @@
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.TextToSend = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -40,8 +42,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.EnableGlobalHotkeysCheckBox = new System.Windows.Forms.CheckBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,7 +90,18 @@
             this.TextToSend.Name = "TextToSend";
             this.TextToSend.Size = new System.Drawing.Size(292, 27);
             this.TextToSend.TabIndex = 2;
-            this.TextToSend.Text = "William.Rawls+nhotphrases@Gmail.com";
+            this.TextToSend.Text = "William.Rawls+nhotphrase@Gmail.com";
+            // 
+            // label11
+            // 
+            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(361, 163);
+            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(200, 20);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "Caps Lock, Caps Lock, M, X, X";
             // 
             // label8
             // 
@@ -124,6 +135,17 @@
             this.label4.Size = new System.Drawing.Size(242, 20);
             this.label4.TabIndex = 1;
             this.label4.Text = "Caps Lock, Caps Lock, D, Backspace";
+            // 
+            // label10
+            // 
+            this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(8, 163);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(287, 20);
+            this.label10.TabIndex = 1;
+            this.label10.Text = "Double wildcard alphanumeric hot phrase";
             // 
             // label9
             // 
@@ -205,28 +227,6 @@
             this.EnableGlobalHotkeysCheckBox.Text = "Global hotkeys enabled";
             this.EnableGlobalHotkeysCheckBox.UseVisualStyleBackColor = true;
             this.EnableGlobalHotkeysCheckBox.CheckedChanged += new System.EventHandler(this.EnableGlobalHotkeysCheckBox_CheckedChanged);
-            // 
-            // label10
-            // 
-            this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(8, 163);
-            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(322, 20);
-            this.label10.TabIndex = 1;
-            this.label10.Text = "Double wildcard digit alphanumeric hot phrase";
-            // 
-            // label11
-            // 
-            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(361, 163);
-            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(200, 20);
-            this.label11.TabIndex = 1;
-            this.label11.Text = "Caps Lock, Caps Lock, M, X, X";
             // 
             // DemoForm
             // 

@@ -12,7 +12,7 @@ namespace NHotPhrase.Wpf.Demo
     /// </summary>
     public partial class MainWindow : INotifyPropertyChanged
     {
-        public HotPhraseManager Manager { get; set; }
+        public HotPhraseManager HotPhraseManager { get; set; }
         public static object SyncRoot = new();
         public static bool UiChanging;
 
@@ -23,17 +23,17 @@ namespace NHotPhrase.Wpf.Demo
 
         private void SetupHotPhrases()
         {
-            Manager?.Dispose();
-            Manager = new HotPhraseManager();
+            HotPhraseManager?.Dispose();
+            HotPhraseManager = new HotPhraseManager();
 
-            Manager.Keyboard.AddOrReplace(
+            HotPhraseManager.Keyboard.AddOrReplace(
                 KeySequence 
                     .Named("Toggle hot phrase activation")
                     .WhenKeyRepeats(PKey.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
             );
 
-            Manager.Keyboard.AddOrReplace(
+            HotPhraseManager.Keyboard.AddOrReplace(
                 KeySequence
                     .Named("Increment")
                     .WhenKeyPressed(PKey.ControlKey)
@@ -43,10 +43,10 @@ namespace NHotPhrase.Wpf.Demo
             );
 
             // Use the NHotkey like syntax if you like
-            Manager.Keyboard.AddOrReplace("Decrement", new[] {PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back}, OnDecrement);
+            HotPhraseManager.Keyboard.AddOrReplace("Decrement", new[] {PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back}, OnDecrement);
 
             // Or spell it out
-            Manager.Keyboard.AddOrReplace(
+            HotPhraseManager.Keyboard.AddOrReplace(
                 KeySequence
                     .Named("Write some text")
                     .WhenKeyRepeats(PKey.CapsLock, 2)   // <<< User must press the caps lock pKey twice
@@ -57,7 +57,7 @@ namespace NHotPhrase.Wpf.Demo
             );
 
             // Write some text plus any wildcards
-            Manager.Keyboard.AddOrReplace(
+            HotPhraseManager.Keyboard.AddOrReplace(
                 KeySequence
                     .Factory()                                             // <<< Name isn't necessary and defaults to a new Guid
                     .WhenKeysPressed(PKey.CapsLock, PKey.CapsLock, PKey.N) // <<< Specify the entire pKey sequence at once
@@ -66,21 +66,20 @@ namespace NHotPhrase.Wpf.Demo
             );
 
             // Here's a near equivalent in a single line call syntax except any two a-Z or 0-9 characters match after the first static 3
-            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, PKey.CapsLock, PKey.CapsLock, PKey.M);
+            HotPhraseManager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, PKey.CapsLock, PKey.CapsLock, PKey.M);
         }
-
-
+        
         private void OnWriteTextFromTextBox(object? sender, PhraseEventArguments e)
         {
-            ForSendingKeys.SendBackspaces(3);
-
-            var textPartsToSend = TextToSend.Text.MakeReadyForSendKeys();
+            SendPKeys.SendBackspaces(3);
+            
+            var textPartsToSend = TextToSend.Text.MakeReadyForSending();
             if (textPartsToSend.Count <= 0) return;
 
-            SendKeysProxyForWinForms.Singleton.SendKeysAndWait(textPartsToSend, 2);
+            SendPKeys.Singleton.SendKeysAndWait(textPartsToSend, 2);
         }
 
-        public static void OnWriteTextWithWildcards(object? sender, PhraseEventArguments e)
+        public void OnWriteTextWithWildcards(object? sender, PhraseEventArguments e)
         {
             if (e.State.MatchResult == null)
                 return;  
@@ -91,7 +90,7 @@ namespace NHotPhrase.Wpf.Demo
             if (wildcardsLength == 0) return;
             
             // Send enough backspaces to cover the extra keys typed during the match
-            SendKeysHelper.SendBackspaces(1 + e.State.MatchResult.Value.Length);
+            SendPKeys.SendBackspaces(1 + e.State.MatchResult.Value.Length);
 
             // Send some strings based on the wildcard character(s)
             $"Your wildcard is {wildcards}".SendString();
@@ -104,6 +103,13 @@ namespace NHotPhrase.Wpf.Demo
                     "\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n".SendString();
                     break;
 
+                case "NE":
+                    Negate();
+                    break;
+
+                case "TE":
+                    Test();
+                    break;
                 default:
                     $"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ".SendString();
                     break;
@@ -114,7 +120,7 @@ namespace NHotPhrase.Wpf.Demo
         {
             lock(SyncRoot)
             {
-                EnableGlobalHotkeysCheckBox.Checked = !EnableGlobalHotkeysCheckBox.Checked;
+                IsHotkeyManagerEnabled = !IsHotkeyManagerEnabled;
             }
         }
 
@@ -147,14 +153,19 @@ namespace NHotPhrase.Wpf.Demo
         public DelegateCommand _testCommand;
         public ICommand TestCommand => _testCommand ??= new DelegateCommand(Test);
 
-        public string IncrementHotkey => IncrementGesture.GetDisplayStringForCulture(null);
-        public string DecrementHotkey => DecrementGesture.GetDisplayStringForCulture(null);
-
         public bool IsHotkeyManagerEnabled
         {
-            get => ForSending
-                HotPhraseManager.Current.IsEnabled;
-            set => HotPhraseManager.Current.IsEnabled = value;
+            get => HotPhraseManager != null;
+            set
+            {
+                if (value)
+                    SetupHotPhrases();
+                else
+                {
+                    HotPhraseManager?.Dispose();
+                    HotPhraseManager = null;
+                }
+            }
         }
 
         public void Test()
@@ -167,7 +178,6 @@ namespace NHotPhrase.Wpf.Demo
         {
             Value = -Value;
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 

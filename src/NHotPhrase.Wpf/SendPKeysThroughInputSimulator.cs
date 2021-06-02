@@ -9,6 +9,11 @@ namespace NHotPhrase.Wpf
 {
     public class SendPKeysThroughInputSimulator : ISendKeys
     {
+        static SendPKeysThroughInputSimulator()
+        {
+            SendPKeys.Singleton = new SendPKeysThroughInputSimulator();
+        }
+
         public int MillisecondsBetweenKeyPress { get; set; } = 1;
         public InputSimulator InputSimulator { get; set; } = new InputSimulator();
 
