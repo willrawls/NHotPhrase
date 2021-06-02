@@ -4,6 +4,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/willrawls/NHotPhrase</PackageProjectUrl>
     <PackageTags>global;hotkey;windows;keyboard;hotphrase</PackageTags>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Label="Package properties">
