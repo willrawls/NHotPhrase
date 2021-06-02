@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using NHotPhrase.Phrase;
 
 namespace NHotPhrase.Wpf
 {
@@ -10,96 +11,12 @@ namespace NHotPhrase.Wpf
         "Microsoft.Design",
         "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
         Justification = "This is a singleton; disposing it would break it")]
-    public class HotPhraseManager
+    public class HotPhraseManagerForWpf : HotPhraseManager
     {
-        #region Singleton implementation
-
-        public static HotPhraseManager Current => LazyInitializer.Instance;
-
-        public static class LazyInitializer
-        {
-            static LazyInitializer() { }
-            public static readonly HotPhraseManager Instance = new HotPhraseManager();
-        }
-
-        #endregion
-
-        #region Attached property for KeyBindings
-
-        [AttachedPropertyBrowsableForType(typeof(KeyBinding))]
-        public static bool GetRegisterGlobalHotkey(KeyBinding binding)
-        {
-            return (bool)binding.GetValue(RegisterGlobalHotkeyProperty);
-        }
-
-        public static void SetRegisterGlobalHotkey(KeyBinding binding, bool value)
-        {
-            binding.SetValue(RegisterGlobalHotkeyProperty, value);
-        }
-
-        public static readonly DependencyProperty RegisterGlobalHotkeyProperty =
-            DependencyProperty.RegisterAttached(
-                "RegisterGlobalHotkey",
-                typeof(bool),
-                typeof(HotPhraseManager),
-                new PropertyMetadata(
-                    false,
-                    RegisterGlobalHotkeyPropertyChanged));
-
-        public static void RegisterGlobalHotkeyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var keyBinding = d as KeyBinding;
-            if (keyBinding == null)
-                return;
-
-            var oldValue = (bool) e.OldValue;
-            var newValue = (bool) e.NewValue;
-
-            if (DesignerProperties.GetIsInDesignMode(d))
-                return;
-
-            if (oldValue && !newValue)
-            {
-                Current.RemoveKeyBinding(keyBinding);
-            }
-            else if (newValue && !oldValue)
-            {
-                Current.AddKeyBinding(keyBinding);
-            }
-        }
-
-        #endregion
-
-        #region HotkeyAlreadyRegistered event
-
-        public static event EventHandler<HotkeyAlreadyRegisteredEventArgs> HotPhraseAlreadyRegistered;
-
-        public static void ONHotPhraseAlreadyRegistered(string name)
-        {
-            var handler = HotPhraseAlreadyRegistered;
-            if (handler != null)
-                handler(null, new HotkeyAlreadyRegisteredEventArgs(name));
-        }
-
-        #endregion
-
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         public readonly HwndSource _source;
-        public readonly WeakReferenceCollection<KeyBinding> _keyBindings;
 
-        public HotPhraseManager()
-        {
-            _keyBindings = new WeakReferenceCollection<KeyBinding>();
-
-            var parameters = new HwndSourceParameters("Hotkey sink")
-                             {
-                                 HwndSourceHook = HandleMessage,
-                                 ParentWindow = WindowMessage
-                             };
-            _source = new HwndSource(parameters);
-            SetHwnd(_source.Handle);
-        }
-
+        /*
         public void AddOrReplace(string name, KeyGesture gesture, EventHandler<HotPhraseEventArgs> handler)
         {
             AddOrReplace(name, gesture, false, handler);
@@ -196,8 +113,9 @@ namespace NHotPhrase.Wpf
 
             return result;
         }
+                */
 
-        public bool ExecuteBoundCommand(Hotkey hotkey)
+        public bool ExecuteBoundCommand(Phrase hotkey)
         {
             var key = KeyInterop.KeyFromVirtualKey((int)hotkey.VirtualKey);
             var modifiers = GetModifiers(hotkey.Flags);

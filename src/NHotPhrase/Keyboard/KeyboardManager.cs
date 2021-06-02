@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
-using NHotPhrase.Keyboard;
 using NHotPhrase.Phrase;
 
-namespace NHotPhrase.WindowsForms
+namespace NHotPhrase.Keyboard
 {
     public class KeyboardManager : IDisposable
     {

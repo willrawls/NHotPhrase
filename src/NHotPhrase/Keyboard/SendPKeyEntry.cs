@@ -1,12 +1,12 @@
 ﻿namespace NHotPhrase.Keyboard
 {
-    public class SendKeyEntry
+    public class SendPKeyEntry
     {
         public string Name { get; }
         public int Number { get; }
         public string ReplaceWith { get; }
 
-        public SendKeyEntry(string name, int number, string replaceWith = null)
+        public SendPKeyEntry(string name, int number, string replaceWith = null)
         {
             Name = name;
             Number = number;

@@ -7,6 +7,9 @@
     <Description>A managed library to handle global hotkeys in WPF applications. This package contains the concrete HotkeyManager implementation for WPF.</Description>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="InputSimulatorCore" Version="1.0.5" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\NHotPhrase\NHotPhrase.csproj" />
   </ItemGroup>
 </Project>

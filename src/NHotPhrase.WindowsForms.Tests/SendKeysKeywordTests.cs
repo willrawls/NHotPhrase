@@ -38,7 +38,7 @@ namespace NHotPhrase.WindowsForms.Tests
             var data = "abcde+fgyzyzyzyzyzyzyzyzyzyz@hijk.lmn";
 
             var expected = "abcde{ADD}fgyzyzyzyzyzyzyzyzyzyz@hijk.lmn";
-            var actual = data.MakeReadyForSendKeys(8);
+            var actual = data.MakeReadyForSending(8);
             Assert.IsNotNull(actual);
             Assert.AreEqual(6, actual.Count);
             

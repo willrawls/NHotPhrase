@@ -7,7 +7,7 @@ namespace NHotPhrase.WindowsForms.Demo
 {
     public partial class DemoForm : Form
     {
-        public int _value;
+        public int Value;
 
         public HotPhraseManager Manager { get; set; }
         public static object SyncRoot = new();
@@ -71,12 +71,12 @@ namespace NHotPhrase.WindowsForms.Demo
 
         private void OnWriteTextFromTextBox(object? sender, PhraseEventArguments e)
         {
-            SendKeysHelper.SendBackspaces(3);
+            ForSendingKeys.SendBackspaces(3);
 
-            var textPartsToSend = TextToSend.Text.MakeReadyForSendKeys();
+            var textPartsToSend = TextToSend.Text.MakeReadyForSending();
             if (textPartsToSend.Count <= 0) return;
 
-            SendKeysProxyForWinForms.Singleton.SendKeysAndWait(textPartsToSend, 2);
+            SendPKeysThroughSendKeys.Singleton.SendKeysAndWait(textPartsToSend, 2);
         }
 
         public static void OnWriteTextWithWildcards(object? sender, PhraseEventArguments e)
@@ -90,7 +90,7 @@ namespace NHotPhrase.WindowsForms.Demo
             if (wildcardsLength == 0) return;
             
             // Send enough backspaces to cover the extra keys typed during the match
-            SendKeysHelper.SendBackspaces(1 + e.State.MatchResult.Value.Length);
+            ForSendingKeys.SendBackspaces(1 + e.State.MatchResult.Value.Length);
 
             // Send some strings based on the wildcard character(s)
             $"Your wildcard is {wildcards}".SendString();
@@ -131,11 +131,11 @@ namespace NHotPhrase.WindowsForms.Demo
 
         public int Value
         {
-            get => _value;
+            get => Balue;
             set
             {
-                _value = value;
-                lblValue.Text = _value.ToString();
+                Balue = value;
+                lblValue.Text = Balue.ToString();
             }
         }
 

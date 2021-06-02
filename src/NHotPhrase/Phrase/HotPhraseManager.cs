@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using NHotPhrase.Keyboard;
 
-namespace NHotPhrase.WindowsForms
+namespace NHotPhrase.Phrase
 {
     public class HotPhraseManager : IDisposable
     {
