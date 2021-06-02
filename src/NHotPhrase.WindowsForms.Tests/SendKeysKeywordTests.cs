@@ -57,62 +57,62 @@ namespace NHotPhrase.WindowsForms.Tests
         [TestMethod]
         public void ShouldBeSimplified_True()
         {
-            Assert.IsTrue(Keys.Shift.ShouldBeSimplified());
-            Assert.IsTrue(Keys.Control.ShouldBeSimplified());
-            Assert.IsTrue(Keys.ShiftKey.ShouldBeSimplified());
-            Assert.IsTrue(Keys.ControlKey.ShouldBeSimplified());
-            Assert.IsTrue(Keys.Alt.ShouldBeSimplified());
-            Assert.IsTrue(Keys.LWin.ShouldBeSimplified());
-            Assert.IsTrue(Keys.D5.ShouldBeSimplified());
+            Assert.IsTrue(PKey.Shift.ShouldBeSimplified());
+            Assert.IsTrue(PKey.Control.ShouldBeSimplified());
+            Assert.IsTrue(PKey.ShiftKey.ShouldBeSimplified());
+            Assert.IsTrue(PKey.ControlKey.ShouldBeSimplified());
+            Assert.IsTrue(PKey.Alt.ShouldBeSimplified());
+            Assert.IsTrue(PKey.LWin.ShouldBeSimplified());
+            Assert.IsTrue(PKey.D5.ShouldBeSimplified());
         }
 
         [TestMethod]
         public void ShouldBeSimplified_False()
         {
-            Assert.IsFalse(Keys.A.ShouldBeSimplified());
-            Assert.IsFalse(Keys.Enter.ShouldBeSimplified());
-            Assert.IsFalse(Keys.NumPad0.ShouldBeSimplified());
-            Assert.IsFalse(Keys.Home.ShouldBeSimplified());
-            Assert.IsFalse(Keys.LMenu.ShouldBeSimplified());
+            Assert.IsFalse(PKey.A.ShouldBeSimplified());
+            Assert.IsFalse(PKey.Enter.ShouldBeSimplified());
+            Assert.IsFalse(PKey.NumPad0.ShouldBeSimplified());
+            Assert.IsFalse(PKey.Home.ShouldBeSimplified());
+            Assert.IsFalse(PKey.LMenu.ShouldBeSimplified());
         }
 
         /*
         [TestMethod]
         public void IsExacting_True()
         {
-            Assert.IsTrue(SendKeysKeyword.IsExacting(Keys.LShiftKey));
-            Assert.IsTrue(SendKeysKeyword.IsExacting(Keys.RShiftKey));
-            Assert.IsTrue(SendKeysKeyword.IsExacting(Keys.RMenu));
-            Assert.IsTrue(SendKeysKeyword.IsExacting(Keys.LControlKey));
-            Assert.IsTrue(SendKeysKeyword.IsExacting(Keys.NumPad5));
+            Assert.IsTrue(SendKeysKeyword.IsExacting(PKey.LShiftKey));
+            Assert.IsTrue(SendKeysKeyword.IsExacting(PKey.RShiftKey));
+            Assert.IsTrue(SendKeysKeyword.IsExacting(PKey.RMenu));
+            Assert.IsTrue(SendKeysKeyword.IsExacting(PKey.LControlKey));
+            Assert.IsTrue(SendKeysKeyword.IsExacting(PKey.NumPad5));
         }
 
         [TestMethod]
         public void IsExacting_False()
         {
-            Assert.IsFalse(SendKeysKeyword.IsExacting(Keys.A));
-            Assert.IsFalse(SendKeysKeyword.IsExacting(Keys.Enter));
-            Assert.IsFalse(SendKeysKeyword.IsExacting(Keys.D0));
-            Assert.IsFalse(SendKeysKeyword.IsExacting(Keys.Home));
+            Assert.IsFalse(SendKeysKeyword.IsExacting(PKey.A));
+            Assert.IsFalse(SendKeysKeyword.IsExacting(PKey.Enter));
+            Assert.IsFalse(SendKeysKeyword.IsExacting(PKey.D0));
+            Assert.IsFalse(SendKeysKeyword.IsExacting(PKey.Home));
         }
         */
 
         [TestMethod]
         public void IsAMatch_WhenTheSame_True()
         {
-            Assert.IsTrue(Keys.A.IsAMatch(Keys.A));
+            Assert.IsTrue(PKey.A.IsAMatch(PKey.A));
         }
 
         [TestMethod]
         public void IsAMatch_WhenSimilar_True()
         {
-            Assert.IsTrue(Keys.Control.IsAMatch(Keys.RControlKey));
+            Assert.IsTrue(PKey.Control.IsAMatch(PKey.RControlKey));
         }
 
         [TestMethod]
         public void IsAMatch_WhenSimilar_False()
         {
-            Assert.IsFalse(Keys.RControlKey.IsAMatch(Keys.ControlKey));
+            Assert.IsFalse(PKey.RControlKey.IsAMatch(PKey.ControlKey));
         }
     }
 }

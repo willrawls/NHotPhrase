@@ -27,32 +27,32 @@ namespace NHotPhrase.WindowsForms.Demo
             Manager = new HotPhraseManager();
 
             Manager.Keyboard.AddOrReplace(
-                KeySequence
+                KeySequence 
                     .Named("Toggle hot phrase activation")
-                    .WhenKeyRepeats(Keys.RControlKey, 3)
+                    .WhenKeyRepeats(PKey.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
             );
 
             Manager.Keyboard.AddOrReplace(
                 KeySequence
                     .Named("Increment")
-                    .WhenKeyPressed(Keys.ControlKey)
-                    .ThenKeyPressed(Keys.Shift)
-                    .ThenKeyPressed(Keys.Alt)
+                    .WhenKeyPressed(PKey.ControlKey)
+                    .ThenKeyPressed(PKey.Shift)
+                    .ThenKeyPressed(PKey.Alt)
                     .ThenCall(OnIncrement)
             );
 
             // Use the NHotkey like syntax if you like
-            Manager.Keyboard.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
+            Manager.Keyboard.AddOrReplace("Decrement", new[] {PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back}, OnDecrement);
 
             // Or spell it out
             Manager.Keyboard.AddOrReplace(
                 KeySequence
                     .Named("Write some text")
-                    .WhenKeyRepeats(Keys.CapsLock, 2)   // <<< User must press the caps lock key twice
-                    .ThenKeyPressed(Keys.W)             // <<<   then a W, a R and a G must be pressed
-                    .ThenKeyPressed(Keys.R)
-                    .ThenKeyPressed(Keys.G)
+                    .WhenKeyRepeats(PKey.CapsLock, 2)   // <<< User must press the caps lock pKey twice
+                    .ThenKeyPressed(PKey.W)             // <<<   then a W, a R and a G must be pressed
+                    .ThenKeyPressed(PKey.R)
+                    .ThenKeyPressed(PKey.G)
                     .ThenCall(OnWriteTextFromTextBox)   // <<< When that happens, this function is called
             );
 
@@ -60,27 +60,23 @@ namespace NHotPhrase.WindowsForms.Demo
             Manager.Keyboard.AddOrReplace(
                 KeySequence
                     .Factory()                                             // <<< Name isn't necessary and defaults to a new Guid
-                    .WhenKeysPressed(Keys.CapsLock, Keys.CapsLock, Keys.N) // <<< Specify the entire key sequence at once
+                    .WhenKeysPressed(PKey.CapsLock, PKey.CapsLock, PKey.N) // <<< Specify the entire pKey sequence at once
                     .FollowedByWildcards(WildcardMatchType.Digits, 1)      // <<< User must press 0-9 one time and only one time to match
                     .ThenCall(OnWriteTextWithWildcards)                    // <<< That one digit passed to this function
             );
 
             // Here's a near equivalent in a single line call syntax except any two a-Z or 0-9 characters match after the first static 3
-            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, Keys.CapsLock, Keys.CapsLock, Keys.M);
+            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, PKey.CapsLock, PKey.CapsLock, PKey.M);
         }
 
         private void OnWriteTextFromTextBox(object? sender, PhraseEventArguments e)
         {
-            SendKeyHelpers.SendBackspaces(3);
+            SendKeysHelper.SendBackspaces(3);
 
             var textPartsToSend = TextToSend.Text.MakeReadyForSendKeys();
             if (textPartsToSend.Count <= 0) return;
 
-            foreach (var part in textPartsToSend)
-            {
-                SendKeys.SendWait(part);
-                Thread.Sleep(2);
-            }
+            SendKeysProxy.Singleton.SendKeysAndWait(textPartsToSend, 2);
         }
 
         public static void OnWriteTextWithWildcards(object? sender, PhraseEventArguments e)
@@ -94,7 +90,7 @@ namespace NHotPhrase.WindowsForms.Demo
             if (wildcardsLength == 0) return;
             
             // Send enough backspaces to cover the extra keys typed during the match
-            SendKeyHelpers.SendBackspaces(1 + e.State.MatchResult.Value.Length);
+            SendKeysHelper.SendBackspaces(1 + e.State.MatchResult.Value.Length);
 
             // Send some strings based on the wildcard character(s)
             $"Your wildcard is {wildcards}".SendString();

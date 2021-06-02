@@ -11,8 +11,8 @@ namespace NHotPhrase.WindowsForms.Tests
     [TestClass]
     public class TriggerTests
     {
-        public static Keys[] RControl3Times = new[] {Keys.RControlKey, Keys.RControlKey, Keys.RControlKey};
-        public static Keys[] Shift3Times = new[] {Keys.Shift, Keys.Shift, Keys.Shift};
+        public static PKey[] RControl3Times = new[] {PKey.RControlKey, PKey.RControlKey, PKey.RControlKey};
+        public static PKey[] Shift3Times = new[] {PKey.Shift, PKey.Shift, PKey.Shift};
 
         [TestMethod]
         public void RControl3Times_IsAMatch_True()
@@ -24,11 +24,11 @@ namespace NHotPhrase.WindowsForms.Tests
                 args.Handled = true;
             });
 
-            var history = new List<Keys>
+            var history = new List<PKey>
             {
-                Keys.RControlKey,
-                Keys.RControlKey,
-                Keys.RControlKey,
+                PKey.RControlKey,
+                PKey.RControlKey,
+                PKey.RControlKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone, out var wildcards);
@@ -41,11 +41,11 @@ namespace NHotPhrase.WindowsForms.Tests
         {
             var data = new KeySequence("Fred", Shift3Times, (sender, args) => args.Handled = true);
 
-            var history = new List<Keys>
+            var history = new List<PKey>
             {
-                Keys.LShiftKey,
-                Keys.RShiftKey,
-                Keys.ShiftKey,
+                PKey.LShiftKey,
+                PKey.RShiftKey,
+                PKey.ShiftKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone, out var wildcards);
@@ -64,13 +64,13 @@ namespace NHotPhrase.WindowsForms.Tests
                 args.Handled = true;
             });
 
-            var history = new List<Keys>
+            var history = new List<PKey>
             {
-                Keys.RControlKey,
-                Keys.Enter,
-                Keys.RControlKey,
-                Keys.RControlKey,
-                Keys.RControlKey,
+                PKey.RControlKey,
+                PKey.Enter,
+                PKey.RControlKey,
+                PKey.RControlKey,
+                PKey.RControlKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone, out var wildcards);
@@ -88,11 +88,11 @@ namespace NHotPhrase.WindowsForms.Tests
                 args.Handled = true;
             });
 
-            var history = new List<Keys>
+            var history = new List<PKey>
             {
-                Keys.RControlKey,
-                Keys.A,
-                Keys.RControlKey,
+                PKey.RControlKey,
+                PKey.A,
+                PKey.RControlKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone, out var wildcards);
@@ -101,7 +101,7 @@ namespace NHotPhrase.WindowsForms.Tests
         }
 
         [TestMethod]
-        public void RControl3Times_IsAMatch_False_NotEnoughKeys()
+        public void RControl3Times_IsAMatch_False_NotEnoughPKey()
         {
             var callCount = 0;
             var data = new KeySequence("Fred", RControl3Times, (sender, args) =>
@@ -110,10 +110,10 @@ namespace NHotPhrase.WindowsForms.Tests
                 args.Handled = true;
             });
 
-            var history = new List<Keys>
+            var history = new List<PKey>
             {
-                Keys.RControlKey,
-                Keys.RControlKey,
+                PKey.RControlKey,
+                PKey.RControlKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone, out var wildcards);
@@ -122,20 +122,20 @@ namespace NHotPhrase.WindowsForms.Tests
         }
 
         [DataTestMethod]
-        [DataRow(new[]{ Keys.A }, new[]{ Keys.A })]
-        [DataRow(new[]{ Keys.A, Keys.A }, new[]{ Keys.A, Keys.B, Keys.A, Keys.A })]
-        [DataRow(new[]{ Keys.CapsLock, Keys.Control }, new[]{ Keys.A, Keys.B, Keys.CapsLock, Keys.RControlKey })]
-        [DataRow(new[]{ Keys.Control, Keys.LControlKey }, new[]{ Keys.A, Keys.RControlKey, Keys.LControlKey })]
-        [DataRow(new[]{ Keys.RControlKey, Keys.RControlKey }, new[]{ Keys.RControlKey, Keys.B, Keys.RControlKey, Keys.RControlKey })]
-        [DataRow(new[]{ Keys.RControlKey, Keys.Control }, new[]{ Keys.RControlKey, Keys.B, Keys.RControlKey, Keys.LControlKey })]
+        [DataRow(new[]{ PKey.A }, new[]{ PKey.A })]
+        [DataRow(new[]{ PKey.A, PKey.A }, new[]{ PKey.A, PKey.B, PKey.A, PKey.A })]
+        [DataRow(new[]{ PKey.CapsLock, PKey.Control }, new[]{ PKey.A, PKey.B, PKey.CapsLock, PKey.RControlKey })]
+        [DataRow(new[]{ PKey.Control, PKey.LControlKey }, new[]{ PKey.A, PKey.RControlKey, PKey.LControlKey })]
+        [DataRow(new[]{ PKey.RControlKey, PKey.RControlKey }, new[]{ PKey.RControlKey, PKey.B, PKey.RControlKey, PKey.RControlKey })]
+        [DataRow(new[]{ PKey.RControlKey, PKey.Control }, new[]{ PKey.RControlKey, PKey.B, PKey.RControlKey, PKey.LControlKey })]
 
-        [DataRow(new[]{ Keys.RControlKey, Keys.RControlKey, Keys.RControlKey }, new[]{ Keys.RControlKey, Keys.RControlKey, Keys.RControlKey })]
-        [DataRow(new[]{ Keys.Control, Keys.Shift, Keys.Alt}, new[]{ Keys.LControlKey, Keys.RShiftKey, Keys.LMenu })]
+        [DataRow(new[]{ PKey.RControlKey, PKey.RControlKey, PKey.RControlKey }, new[]{ PKey.RControlKey, PKey.RControlKey, PKey.RControlKey })]
+        [DataRow(new[]{ PKey.Control, PKey.Shift, PKey.Alt}, new[]{ PKey.LControlKey, PKey.RShiftKey, PKey.LMenu })]
         
-        [DataRow(new[]{ Keys.CapsLock, Keys.Capital, Keys.D, Keys.Back }, new[]{ Keys.RControlKey, Keys.Capital, Keys.Capital, Keys.D, Keys.Back })]
-        [DataRow(new[]{ Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back }, new[]{ Keys.RControlKey, Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back })]
+        [DataRow(new[]{ PKey.CapsLock, PKey.Capital, PKey.D, PKey.Back }, new[]{ PKey.RControlKey, PKey.Capital, PKey.Capital, PKey.D, PKey.Back })]
+        [DataRow(new[]{ PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back }, new[]{ PKey.RControlKey, PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back })]
         
-        public void VariousSequences_IsAMatch_True(Keys[] hotPhraseSequence, Keys[] userTyped)
+        public void VariousSequences_IsAMatch_True(PKey[] hotPhraseSequence, PKey[] userTyped)
         {
             for (var i = 0; i < 100; i++)
             {
@@ -153,13 +153,13 @@ namespace NHotPhrase.WindowsForms.Tests
         }
 
         [DataTestMethod]
-        [DataRow(new[]{ Keys.B }, new[]{ Keys.A })]
-        [DataRow(new[]{ Keys.A, Keys.A }, new[]{ Keys.A, Keys.B, Keys.A, Keys.B })]
-        [DataRow(new[]{ Keys.CapsLock, Keys.Control }, new[]{ Keys.A, Keys.CapsLock, Keys.B, Keys.RControlKey })]
-        [DataRow(new[]{ Keys.Control, Keys.LControlKey }, new[]{ Keys.A, Keys.RControlKey, Keys.RControlKey })]
-        [DataRow(new[]{ Keys.RControlKey, Keys.RControlKey }, new[]{ Keys.RControlKey, Keys.B, Keys.LControlKey, Keys.RControlKey })]
-        [DataRow(new[]{ Keys.RControlKey, Keys.Control }, new[]{ Keys.RControlKey, Keys.C })]
-        public void VariousSequences_IsAMatch_False(Keys[] hotPhraseSequence, Keys[] userTyped)
+        [DataRow(new[]{ PKey.B }, new[]{ PKey.A })]
+        [DataRow(new[]{ PKey.A, PKey.A }, new[]{ PKey.A, PKey.B, PKey.A, PKey.B })]
+        [DataRow(new[]{ PKey.CapsLock, PKey.Control }, new[]{ PKey.A, PKey.CapsLock, PKey.B, PKey.RControlKey })]
+        [DataRow(new[]{ PKey.Control, PKey.LControlKey }, new[]{ PKey.A, PKey.RControlKey, PKey.RControlKey })]
+        [DataRow(new[]{ PKey.RControlKey, PKey.RControlKey }, new[]{ PKey.RControlKey, PKey.B, PKey.LControlKey, PKey.RControlKey })]
+        [DataRow(new[]{ PKey.RControlKey, PKey.Control }, new[]{ PKey.RControlKey, PKey.C })]
+        public void VariousSequences_IsAMatch_False(PKey[] hotPhraseSequence, PKey[] userTyped)
         {
             for (var i = 0; i < 100; i++)
             {
@@ -179,10 +179,10 @@ namespace NHotPhrase.WindowsForms.Tests
         [TestMethod]
         public void SingleKey_IsAMatch_True()
         {
-            var keysEnumValues = KeysEnumValues();
-            foreach (Keys key in keysEnumValues)
+            var pKeyEnumValues = PKeyEnumValues();
+            foreach (var key in pKeyEnumValues)
             {
-                var sequence = new List<Keys> {key}.ToArray();
+                var sequence = new List<PKey> {key}.ToArray();
                 var simulatedHistoryList = sequence.ToList();
                 var sequenceList = sequence.ToList();
 
@@ -196,7 +196,7 @@ namespace NHotPhrase.WindowsForms.Tests
             }
         }
 
-        public static void TestSequence(List<Keys> simulatedHistory, List<Keys> sequence, bool expected)
+        public static void TestSequence(List<PKey> simulatedHistory, List<PKey> sequence, bool expected)
         {
             var hotPhraseKeySequence = new KeySequence("Fred", sequence.ToArray(), (sender, args) => args.Handled = true);
             var keyHistory = new KeyHistory(8, 8, DateTime.Now, simulatedHistory.ToList());
@@ -217,48 +217,48 @@ namespace NHotPhrase.WindowsForms.Tests
             Assert.AreEqual(expected, actual, debugText);
         }
 
-        private static string KeyListToString(List<Keys> list)
+        private static string KeyListToString(List<PKey> list)
         {
             return list.Aggregate("", (current, item) => current + (" " + item));
         }
 
-        public static List<Keys> KeysToNotGenerateRandomly = null;
+        public static List<PKey> PKeyToNotGenerateRandomly = null;
         public static Random Random = new Random();
-        public static Keys RandomKey(Keys[] butNotTheseKeys)
+        public static PKey RandomKey(PKey[] butNotThesePKey)
         {
-            if (KeysToNotGenerateRandomly == null)
+            if (PKeyToNotGenerateRandomly == null)
             {
-                KeysToNotGenerateRandomly = new List<Keys>();
-                var keysEnumValues = KeysEnumValues();
-                foreach (Keys key in keysEnumValues)
+                PKeyToNotGenerateRandomly = new List<PKey>();
+                var pKeyEnumValues = PKeyEnumValues();
+                foreach (var key in pKeyEnumValues)
                     if(key.ShouldBeSimplified())
-                        KeysToNotGenerateRandomly.Add(key);
+                        PKeyToNotGenerateRandomly.Add(key);
             }
 
-            var randomKey = (Keys) Random.Next(32, 165);
+            var randomKey = (PKey) Random.Next(32, 165);
 
-            while(butNotTheseKeys.Any(k => k == randomKey) 
-                  || KeysToNotGenerateRandomly.Any(k => k == randomKey))
+            while(butNotThesePKey.Any(k => k == randomKey) 
+                  || PKeyToNotGenerateRandomly.Any(k => k == randomKey))
             {
-                randomKey = (Keys) Random.Next(32, 165);
+                randomKey = (PKey) Random.Next(32, 165);
             }
 
             return randomKey;
         }
 
-        private static List<Keys> _keysEnumValues = null;
-        private static List<Keys> KeysEnumValues()
+        private static List<PKey> _PKeyEnumValues = null;
+        private static List<PKey> PKeyEnumValues()
         {
-            if (_keysEnumValues != null) 
-                return _keysEnumValues;
+            if (_PKeyEnumValues != null) 
+                return _PKeyEnumValues;
 
-            _keysEnumValues = new List<Keys>();
-            foreach (Keys key in Enum.GetValues(typeof(Keys)))
+            _PKeyEnumValues = new List<PKey>();
+            foreach (PKey key in Enum.GetValues(typeof(PKey)))
             {
-                if(key != Keys.None) 
-                    _keysEnumValues .Add(key);
+                if(key != PKey.None) 
+                    _PKeyEnumValues .Add(key);
             }
-            return _keysEnumValues;
+            return _PKeyEnumValues;
         }
     }
 }

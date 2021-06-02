@@ -17,7 +17,7 @@ namespace NHotPhrase.WindowsForms.Tests
             var callCount = 0;
             hotPhraseManager.CallThisEachTimeAKeyIsPressed((_, args) =>
             {
-                Assert.AreEqual(Keys.RControlKey, args.KeyboardData.Key);
+                Assert.AreEqual(PKey.RControlKey, args.KeyboardData.PKey);
                 ++callCount;
                 args.Handled = true;
             });
@@ -25,10 +25,10 @@ namespace NHotPhrase.WindowsForms.Tests
             var lowLevelKeyboardInputEvent = new LowLevelKeyboardInputEvent
             {
                 AdditionalInformation = IntPtr.Zero,
-                HardwareScanCode = (int) Keys.RControlKey,
+                HardwareScanCode = (int) PKey.RControlKey,
                 Flags = 0,
                 TimeStamp = 0,
-                VirtualCode = (int) Keys.RControlKey
+                VirtualCode = (int) PKey.RControlKey
             };
             var keyboardState = KeyboardState.KeyUp;
             var eventArguments = new GlobalKeyboardHookEventArgs(lowLevelKeyboardInputEvent, keyboardState);
@@ -42,7 +42,7 @@ namespace NHotPhrase.WindowsForms.Tests
 
         private static KeyboardManager SetupHotPhraseManagerTest(out KeySequence hotPhrase)
         {
-            var keys = new[] {Keys.ControlKey, Keys.ControlKey, Keys.ControlKey};
+            var keys = new[] {PKey.ControlKey, PKey.ControlKey, PKey.ControlKey};
 
             void hotPhraseEventArgs(object? _, PhraseEventArguments e) => e.Handled = true;
             hotPhrase = new KeySequence("RightControl3TimesInARow", keys, hotPhraseEventArgs);
@@ -62,9 +62,9 @@ namespace NHotPhrase.WindowsForms.Tests
             
             Assert.IsNotNull(hotPhraseManager.KeySequences[0].Sequence);
             Assert.AreEqual(3, hotPhraseManager.KeySequences[0].Sequence.Count);
-            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.KeySequences[0].Sequence[0]);
-            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.KeySequences[0].Sequence[1]);
-            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.KeySequences[0].Sequence[2]);
+            Assert.AreEqual(PKey.ControlKey, hotPhraseManager.KeySequences[0].Sequence[0]);
+            Assert.AreEqual(PKey.ControlKey, hotPhraseManager.KeySequences[0].Sequence[1]);
+            Assert.AreEqual(PKey.ControlKey, hotPhraseManager.KeySequences[0].Sequence[2]);
             
             Assert.IsNotNull(hotPhraseManager.KeySequences[0].ActionList[0].Handler);
             var hotPhraseEventArgs = new PhraseEventArguments(null, null, null);

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.Phrase
 {
@@ -9,10 +9,10 @@ namespace NHotPhrase.Phrase
         public bool Handled { get; set; }
         public PhraseAction Action { get; set; }
         public PhraseActionRunState State { get; set; }
-        public List<Keys> KeysToSend { get; set; }
+        public List<PKey> KeysToSend { get; set; }
         public string Name => State?.KeySequence?.Name;
 
-        public PhraseEventArguments(PhraseAction action, PhraseActionRunState state, List<Keys> keysToSend)
+        public PhraseEventArguments(PhraseAction action, PhraseActionRunState state, List<PKey> keysToSend)
         {
             Action = action;
             State = state;

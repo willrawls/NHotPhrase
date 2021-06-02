@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using NHotPhrase.Phrase;
 
 namespace NHotPhrase.Wpf.Demo
 {
@@ -10,29 +11,21 @@ namespace NHotPhrase.Wpf.Demo
     /// </summary>
     public partial class MainWindow : INotifyPropertyChanged
     {
-        public static readonly KeyGesture IncrementGesture = new KeyGesture(Key.Up, ModifierKeys.Control | ModifierKeys.Alt);
-        public static readonly KeyGesture DecrementGesture = new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Alt);
+        public HotPhraseManager Manager { get; set; }
 
         public MainWindow()
         {
-            HotPhraseManager.HotPhraseAlreadyRegistered += HotPhraseManagerHotPhraseAlreadyRegistered;
-
             HotPhraseManager.Current.AddOrReplace("Increment", IncrementGesture, OnIncrement);
             HotPhraseManager.Current.AddOrReplace("Decrement", DecrementGesture, OnDecrement);
         }
 
-        public void HotPhraseManagerHotPhraseAlreadyRegistered(object sender, HotkeyAlreadyRegisteredEventArgs e)
-        {
-            MessageBox.Show($"The hotkey {e.Name} is already registered by another application");
-        }
-
-        public void OnIncrement(object sender, HotPhraseEventArgs e)
+        public void OnIncrement(object sender, PhraseEventArguments e)
         {
             Value++;
             e.Handled = true;
         }
 
-        public void OnDecrement(object sender, HotPhraseEventArgs e)
+        public void OnDecrement(object sender, PhraseEventArguments e)
         {
             Value--;
             e.Handled = true;

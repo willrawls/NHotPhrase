@@ -18,8 +18,8 @@ namespace NHotPhrase.WindowsForms
         {
             if (e.KeyboardState == KeyboardState.KeyUp)
             {
-                Debug.WriteLine($"Key {e.KeyboardData.Key}");
-                History.AddKeyPress(e.KeyboardData.Key);
+                Debug.WriteLine($"PKey {e.KeyboardData.PKey}");
+                History.AddKeyPress(e.KeyboardData.PKey);
                 var trigger = Keyboard.KeySequences.FirstMatch(History, out var matchResult);
                 if (trigger == null)
                     return;

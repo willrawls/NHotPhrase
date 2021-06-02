@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.Phrase
@@ -9,7 +8,7 @@ namespace NHotPhrase.Phrase
     {
         public string Name { get; set; }
 
-        public List<Keys> Sequence = new();
+        public List<PKey> Sequence = new();
         
         public WildcardMatchType WildcardMatchType { get; set; }
         public int WildcardCount { get; set; }
@@ -17,7 +16,7 @@ namespace NHotPhrase.Phrase
         public PhraseActionList ActionList { get; set; } = new();
 
 
-        public KeySequence(string name, Keys[] keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
+        public KeySequence(string name, PKey[] keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
         {
             Name = name;
             Sequence.AddRange(keys);
@@ -44,19 +43,19 @@ namespace NHotPhrase.Phrase
             };
         }
 
-        public KeySequence WhenKeyRepeats(Keys repeatKey, int repeatCount)
+        public KeySequence WhenKeyRepeats(PKey repeatPKey, int repeatCount)
         {
-            for (var i = 0; i < repeatCount; i++) Sequence.Add(repeatKey);
+            for (var i = 0; i < repeatCount; i++) Sequence.Add(repeatPKey);
             return this;
         }
 
-        public KeySequence WhenKeyReleased(Keys key)
+        public KeySequence WhenKeyReleased(PKey pKey)
         {
-            Sequence.Add(key);
+            Sequence.Add(pKey);
             return this;
         }
 
-        public KeySequence WhenKeysReleased(IList<Keys> keys)
+        public KeySequence WhenKeysReleased(IList<PKey> keys)
         {
             Sequence.AddRange(keys);
             return this;
@@ -73,7 +72,7 @@ namespace NHotPhrase.Phrase
             return true;
         }
 
-        public bool IsAMatch(List<Keys> keyList, out MatchResult matchResult)
+        public bool IsAMatch(List<PKey> keyList, out MatchResult matchResult)
         {
             matchResult = null;
 
@@ -163,23 +162,23 @@ namespace NHotPhrase.Phrase
             return this;
         }
 
-        public KeySequence WhenKeyPressed(Keys key)
+        public KeySequence WhenKeyPressed(PKey pKey)
         {
             Sequence.Clear();
-            Sequence.Add(key);
+            Sequence.Add(pKey);
             return this;
         }
 
-        public KeySequence WhenKeysPressed(params Keys[] keys)
+        public KeySequence WhenKeysPressed(params PKey[] keys)
         {
             Sequence.Clear();
             Sequence.AddRange(keys);
             return this;
         }
 
-        public KeySequence ThenKeyPressed(Keys key)
+        public KeySequence ThenKeyPressed(PKey pKey)
         {
-            Sequence.Add(key);
+            Sequence.Add(pKey);
             return this;
         }
 

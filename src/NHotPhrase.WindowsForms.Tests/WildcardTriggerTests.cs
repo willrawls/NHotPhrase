@@ -14,14 +14,14 @@ namespace NHotPhrase.WindowsForms.Tests
         public void ShiftShiftAnySingleDigit_IsAMatch_True()
         {
             var data = new KeySequence("Fred",
-                    new[] {Keys.Shift, Keys.Shift}, (sender, args) => args.Handled = true)
+                    new[] {PKey.Shift, PKey.Shift}, (sender, args) => args.Handled = true)
                 .FollowedByWildcards(WildcardMatchType.Digits, 1);
 
-            var history = new List<Keys>
+            var history = new List<PKey>
             {
-                Keys.LShiftKey,
-                Keys.RShiftKey,
-                Keys.D1,
+                PKey.LShiftKey,
+                PKey.RShiftKey,
+                PKey.D1,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone, out var matchResult);

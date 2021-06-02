@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 namespace NHotPhrase.Keyboard
 {
@@ -8,23 +7,23 @@ namespace NHotPhrase.Keyboard
     public struct LowLevelKeyboardInputEvent
     {
         /// <summary>
-        ///     A virtual-key code. The code must be a value in the range 1 to 254.
+        ///     A virtual-pKey code. The code must be a value in the range 1 to 254.
         /// </summary>
         public int VirtualCode;
 
-        // EDT: added a conversion from VirtualCode to Keys.
+        // EDT: added a conversion from VirtualCode to PKey.
         /// <summary>
-        ///     The VirtualCode converted to typeof(Keys) for higher usability.
+        ///     The VirtualCode converted to typeof(PKey) for higher usability.
         /// </summary>
-        public Keys Key => (Keys) VirtualCode;
+        public PKey PKey => (PKey) VirtualCode;
 
         /// <summary>
-        ///     A hardware scan code for the key.
+        ///     A hardware scan code for the pKey.
         /// </summary>
         public int HardwareScanCode;
 
         /// <summary>
-        ///     The extended-key flag, event-injected Flags, context code, and transition-state flag. This member is specified as
+        ///     The extended-pKey flag, event-injected Flags, context code, and transition-state flag. This member is specified as
         ///     follows. An application can use the following values to test the keystroke Flags. Testing LLKHF_INJECTED (bit 4)
         ///     will tell you whether the event was injected. If it was, then testing LLKHF_LOWER_IL_INJECTED (bit 1) will tell you
         ///     whether or not the event was injected from a process running at lower integrity level.

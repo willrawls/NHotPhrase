@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 using NHotPhrase.Phrase;
 
@@ -25,7 +24,7 @@ namespace NHotPhrase.WindowsForms
             EventHandler<PhraseEventArguments> hotPhraseEventArgs, 
             int wildcardCount, 
             WildcardMatchType matchType, 
-            params Keys[] keys)
+            params PKey[] keys)
         {
             if (hotPhraseEventArgs == null)
                 throw new ArgumentNullException(nameof(hotPhraseEventArgs));
@@ -46,7 +45,7 @@ namespace NHotPhrase.WindowsForms
             return this;
         }
 
-        public KeyboardManager AddOrReplace(string name, Keys[] keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
+        public KeyboardManager AddOrReplace(string name, PKey[] keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
         {
             if (hotPhraseEventArgs == null)
                 throw new ArgumentNullException(nameof(hotPhraseEventArgs));

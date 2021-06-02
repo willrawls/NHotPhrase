@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.Phrase
@@ -9,8 +8,10 @@ namespace NHotPhrase.Phrase
     {
         public KeySequence Parent { get; set; }
         public EventHandler<PhraseEventArguments> Handler { get; set; }
-        public List<Keys> KeysToSend { get; set; }
+        public List<PKey> KeysToSend { get; set; }
         public int MillisecondPauseBetweenKeys { get; set; } = 2;
+
+        public static ISendKeys SendKeysProxy { get; set; }
 
         public PhraseAction(KeySequence parent, EventHandler<PhraseEventArguments> handler = null)
         {
@@ -27,7 +28,7 @@ namespace NHotPhrase.Phrase
 
         public bool RunNow(PhraseActionRunState phraseActionRunState)
         {
-            var keysToSend = new List<Keys>();
+            var keysToSend = new List<PKey>();
             if(KeysToSend is {Count: > 0})
                 keysToSend.AddRange(KeysToSend);
 
@@ -36,16 +37,12 @@ namespace NHotPhrase.Phrase
                 var hotPhraseEventArgs = new PhraseEventArguments(this, phraseActionRunState, keysToSend);
                 Handler(this, hotPhraseEventArgs);
 
-                keysToSend = new List<Keys>();
+                keysToSend = new List<PKey>();
                 if(hotPhraseEventArgs.KeysToSend is {Count: > 0})
                     keysToSend.AddRange(hotPhraseEventArgs.KeysToSend);
             }
 
-            if (keysToSend is not {Count: > 0}) 
-                return true;
-
-            foreach (var key in KeysToSend)
-                SendKeys.SendWait(key.KeyToSendKeyText());
+            SendKeysProxy?.SendKeysAndWait(phraseActionRunState, keysToSend);
 
             return true;
         }
