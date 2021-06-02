@@ -6,6 +6,6 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NHotPhrase.Wpf\NHotPhrase.Wpf.csproj" />
+    <ProjectReference Include="..\..\src\NHotPhrase\NHotPhrase.csproj" />
   </ItemGroup>
 </Project>

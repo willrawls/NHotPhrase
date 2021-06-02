@@ -86,13 +86,17 @@ namespace NHotPhrase.WindowsForms.Demo
         public static void OnWriteTextWithWildcards(object? sender, PhraseEventArguments e)
         {
             if (e.State.MatchResult == null)
-                return;
+                return;  
 
+            // The wildcard character(s) entered by the user are stored in : e.State.MatchResult.Value
             var wildcards = e.State.MatchResult.Value;
             var wildcardsLength = wildcards?.Length ?? 0;
             if (wildcardsLength == 0) return;
             
+            // Send enough backspaces to cover the extra keys typed during the match
             SendKeyHelpers.SendBackspaces(1 + e.State.MatchResult.Value.Length);
+
+            // Send some strings based on the wildcard character(s)
             $"Your wildcard is {wildcards}".SendString();
             switch (e.State.MatchResult.Value.ToUpper())
             {
@@ -104,7 +108,7 @@ namespace NHotPhrase.WindowsForms.Demo
                     break;
 
                 default:
-                    $"\n\n\t### Other\n- This is specific to any other wildcard\n- {e.State.MatchResult.Value}\n- ".SendString();
+                    $"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ".SendString();
                     break;
             }
         }
