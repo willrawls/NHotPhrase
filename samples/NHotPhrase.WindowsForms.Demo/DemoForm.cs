@@ -76,7 +76,7 @@ namespace NHotPhrase.WindowsForms.Demo
             var textPartsToSend = TextToSend.Text.MakeReadyForSendKeys();
             if (textPartsToSend.Count <= 0) return;
 
-            SendKeysProxy.Singleton.SendKeysAndWait(textPartsToSend, 2);
+            SendKeysProxyForWinForms.Singleton.SendKeysAndWait(textPartsToSend, 2);
         }
 
         public static void OnWriteTextWithWildcards(object? sender, PhraseEventArguments e)

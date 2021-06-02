@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NHotPhrase.Keyboard;
+using NHotPhrase.Phrase;
 
-namespace NHotPhrase.Phrase
+namespace NHotPhrase.Keyboard
 {
     public interface ISendKeys
     {

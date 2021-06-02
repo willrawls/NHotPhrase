@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.WindowsForms.Tests

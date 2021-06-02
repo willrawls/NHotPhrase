@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Forms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHotPhrase.Keyboard;
 using NHotPhrase.Phrase;
@@ -33,6 +32,7 @@ namespace NHotPhrase.WindowsForms.Tests
             var keyboardState = KeyboardState.KeyUp;
             var eventArguments = new GlobalKeyboardHookEventArgs(lowLevelKeyboardInputEvent, keyboardState);
 
+            // Send 3 keys
             hotPhraseManager.Hook.HandleKeyEvent(lowLevelKeyboardInputEvent, eventArguments);
             hotPhraseManager.Hook.HandleKeyEvent(lowLevelKeyboardInputEvent, eventArguments);
             hotPhraseManager.Hook.HandleKeyEvent(lowLevelKeyboardInputEvent, eventArguments);

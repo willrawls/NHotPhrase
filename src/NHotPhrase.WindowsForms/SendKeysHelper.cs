@@ -8,7 +8,7 @@ using NHotPhrase.Phrase;
 
 namespace NHotPhrase.WindowsForms
 {
-    public class SendKeysProxy : ISendKeys
+    public class SendKeysProxyForWinForms : ISendKeys
     {
         public bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keysToSend)
         {
@@ -35,7 +35,7 @@ namespace NHotPhrase.WindowsForms
         }
 
         private static ISendKeys _singleton;
-        public static ISendKeys Singleton => _singleton ??= new SendKeysProxy();
+        public static ISendKeys Singleton => _singleton ??= new SendKeysProxyForWinForms();
     }
 
     public static class SendKeysHelper
@@ -56,7 +56,7 @@ namespace NHotPhrase.WindowsForms
                 toSend += "{BACKSPACE}";
             }
 
-            SendKeysProxy.Singleton.SendKeysAndWait(toSend);
+            SendKeysProxyForWinForms.Singleton.SendKeysAndWait(toSend);
         }
 
         public static readonly SendKeyEntry[] SendKeyEntries = {
