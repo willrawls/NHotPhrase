@@ -60,7 +60,7 @@ namespace NHotPhrase.WindowsForms.Demo
             Manager.Keyboard.AddOrReplace(
                 KeySequence
                     .Factory()                                             // <<< Name isn't necessary and defaults to a new Guid
-                    .WhenKeysPressed(new List<PKey> { PKey.CapsLock, PKey.CapsLock, PKey.N }) // <<< Specify the entire pKey sequence at once
+                    .WhenKeysPressed(PKey.CapsLock, PKey.CapsLock, PKey.N) // <<< Specify the entire pKey sequence at once
                     .FollowedByWildcards(WildcardMatchType.Digits, 1)      // <<< User must press 0-9 one time and only one time to match
                     .ThenCall(OnWriteTextWithWildcards)                    // <<< That one digit passed to this function
             );
@@ -114,6 +114,7 @@ namespace NHotPhrase.WindowsForms.Demo
             lock(SyncRoot)
             {
                 EnableGlobalHotkeysCheckBox.Checked = !EnableGlobalHotkeysCheckBox.Checked;
+                UpdateGlobalThingy(EnableGlobalHotkeysCheckBox.Checked);
             }
         }
 

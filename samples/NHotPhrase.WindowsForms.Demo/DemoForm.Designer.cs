@@ -29,9 +29,6 @@
             this.lblValue = new System.Windows.Forms.Label();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.EnableGlobalHotkeysCheckBox = new System.Windows.Forms.CheckBox();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.TextToSend = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -44,6 +41,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.EnableGlobalHotkeysCheckBox = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -86,39 +86,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(572, 191);
             this.panel1.TabIndex = 1;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.panel2);
-            this.flowLayoutPanel1.Controls.Add(this.EnableGlobalHotkeysCheckBox);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(572, 34);
-            this.flowLayoutPanel1.TabIndex = 3;
-            // 
-            // EnableGlobalHotkeysCheckBox
-            // 
-            this.EnableGlobalHotkeysCheckBox.AutoSize = true;
-            this.EnableGlobalHotkeysCheckBox.Checked = true;
-            this.EnableGlobalHotkeysCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnableGlobalHotkeysCheckBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.EnableGlobalHotkeysCheckBox.Location = new System.Drawing.Point(18, 2);
-            this.EnableGlobalHotkeysCheckBox.Margin = new System.Windows.Forms.Padding(2);
-            this.EnableGlobalHotkeysCheckBox.Name = "EnableGlobalHotkeysCheckBox";
-            this.EnableGlobalHotkeysCheckBox.Padding = new System.Windows.Forms.Padding(20, 3, 3, 3);
-            this.EnableGlobalHotkeysCheckBox.Size = new System.Drawing.Size(226, 30);
-            this.EnableGlobalHotkeysCheckBox.TabIndex = 3;
-            this.EnableGlobalHotkeysCheckBox.Text = "Enable Global Hot Phrases";
-            this.EnableGlobalHotkeysCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // panel2
-            // 
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(3, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(10, 25);
-            this.panel2.TabIndex = 4;
             // 
             // TextToSend
             // 
@@ -248,6 +215,40 @@
             this.label1.Size = new System.Drawing.Size(75, 20);
             this.label1.TabIndex = 18;
             this.label1.Text = "Increment";
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.panel2);
+            this.flowLayoutPanel1.Controls.Add(this.EnableGlobalHotkeysCheckBox);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(572, 34);
+            this.flowLayoutPanel1.TabIndex = 3;
+            // 
+            // panel2
+            // 
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(10, 25);
+            this.panel2.TabIndex = 4;
+            // 
+            // EnableGlobalHotkeysCheckBox
+            // 
+            this.EnableGlobalHotkeysCheckBox.AutoSize = true;
+            this.EnableGlobalHotkeysCheckBox.Checked = true;
+            this.EnableGlobalHotkeysCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.EnableGlobalHotkeysCheckBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.EnableGlobalHotkeysCheckBox.Location = new System.Drawing.Point(18, 2);
+            this.EnableGlobalHotkeysCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.EnableGlobalHotkeysCheckBox.Name = "EnableGlobalHotkeysCheckBox";
+            this.EnableGlobalHotkeysCheckBox.Padding = new System.Windows.Forms.Padding(20, 3, 3, 3);
+            this.EnableGlobalHotkeysCheckBox.Size = new System.Drawing.Size(226, 30);
+            this.EnableGlobalHotkeysCheckBox.TabIndex = 3;
+            this.EnableGlobalHotkeysCheckBox.Text = "Enable Global Hot Phrases";
+            this.EnableGlobalHotkeysCheckBox.UseVisualStyleBackColor = true;
+            this.EnableGlobalHotkeysCheckBox.CheckedChanged += new System.EventHandler(this.EnableGlobalHotkeysCheckBox_CheckedChanged);
             // 
             // DemoForm
             // 

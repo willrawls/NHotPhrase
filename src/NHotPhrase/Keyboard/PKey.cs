@@ -3,6 +3,8 @@
 namespace NHotPhrase.Keyboard
 {
     [Flags]
+    // To avoid a reference to System.Windows.Forms, PKey is a direct copy of the System.Windows.Forms.Keys enum.
+    // PKey stands for Phrase Key
     public enum PKey // Copied from System.Windows.Forms.PKey so as to not need the reference
     {
         KeyCode = 65535, // 0x0000FFFF

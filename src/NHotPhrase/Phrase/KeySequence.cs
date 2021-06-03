@@ -169,7 +169,7 @@ namespace NHotPhrase.Phrase
             return this;
         }
 
-        public KeySequence WhenKeysPressed(List<PKey> keys)
+        public KeySequence WhenKeysPressed(params PKey[] keys)
         {
             Sequence.Clear();
             Sequence.AddRange(keys);
