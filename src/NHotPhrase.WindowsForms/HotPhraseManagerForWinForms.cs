@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
@@ -18,7 +19,7 @@ namespace NHotPhrase.WindowsForms
             if (keysToSend is not {Count: > 0}) 
                 return true;
             foreach (var key in keysToSend)
-                SendKeys.SendWait(key.PKeyToSendKeysText());
+                SendKeys.SendWait(ToSendKeysText(key));
             return true;
         }
 
@@ -35,6 +36,23 @@ namespace NHotPhrase.WindowsForms
             foreach (var part in stringsToSend) 
                 SendKeysAndWait(part, 2);
             return true;
+        }
+
+        public bool SendKeysAndWait(List<PKey> keysToSend, int millisecondThreadSleep)
+        {
+            if (keysToSend is not {Count: > 0}) 
+                return true;
+            foreach (var key in keysToSend)
+                SendKeys.SendWait(ToSendKeysText(key));
+            return true;
+        }
+
+        public static string ToSendKeysText(PKey pKey)
+        {
+            var keyword = SendPKeys.SendKeyEntries.FirstOrDefault(k => k.Number == (int) pKey);
+            return keyword != null 
+                ? keyword.SendKeysText()
+                : pKey.ToString();
         }
     }
 }

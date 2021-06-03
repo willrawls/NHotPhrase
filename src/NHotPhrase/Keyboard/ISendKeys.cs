@@ -10,5 +10,6 @@ namespace NHotPhrase.Keyboard
         bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keys);
         bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep);
         bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep);
+        bool SendKeysAndWait(List<PKey> keys, int millisecondThreadSleep);
     }
 }

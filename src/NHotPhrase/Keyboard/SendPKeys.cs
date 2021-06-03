@@ -7,78 +7,9 @@ namespace NHotPhrase.Keyboard
     public static class SendPKeys
     {
         private static ISendKeys _singleton;
-        public static ISendKeys Singleton
+
+        public static readonly SendPKeyEntry[] SendKeyEntries =
         {
-            get
-            {
-                if (_singleton == null)
-                    throw new ArgumentNullException(nameof(Singleton), "Singleton must be set before using these methods");
-                return _singleton;
-            }
-            set => _singleton = value;
-        }
-
-        public static string PKeyToSendKeysText(this PKey pKey)
-        {
-            var keyword = SendKeyEntries.FirstOrDefault(k => k.Number == (int) pKey);
-            return keyword != null 
-                ? keyword.Name 
-                : pKey.ToString();
-        }
-
-        public static void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
-        {
-            var toSend = "";
-            for (var i = 0; i < backspaceCount; i++)
-            {
-                toSend += "{BACKSPACE}";
-            }
-
-            Singleton.SendKeysAndWait(toSend, millisecondsBetweenKeys);
-        }
-
-        public static List<string> MakeReadyForSending(this string target, int splitLength = 8)
-        {
-            if (string.IsNullOrEmpty(target))
-                return new List<string>();
-
-            foreach (var keyword in SendKeyEntries.Where(k => !string.IsNullOrEmpty(k.ReplaceWith)))
-            {
-                target = target.Replace(keyword.Name, "⌂" + keyword.ReplaceWith + "⌂");
-            }
-
-            var list = target.Split('⌂', StringSplitOptions.RemoveEmptyEntries).ToList();
-            while(list.Any(p => p.Length > splitLength))
-            {
-                for (var i = 0; i < list.Count; i++)
-                {
-                    if (list[i].Length <= splitLength) continue;
-
-                    var pieces = list[i].SplitInTwo();
-                    list.RemoveAt(i);
-                    list.InsertRange(i, pieces);
-                }
-            }   
-            return list;
-        }
-
-        public static void SendString(this string textToSend, int millisecondsBetweenKeys = 2)
-        {
-            var textParts = textToSend.MakeReadyForSending();
-            textParts.SendStrings(millisecondsBetweenKeys);
-        }
-
-        public static void SendStrings(this IList<string> textPartsToSend, int millisecondsBetweenKeys = 2)
-        {
-            if (textPartsToSend.Count <= 0) return;
-
-            foreach (var part in textPartsToSend)
-            {
-                Singleton.SendKeysAndWait(part, millisecondsBetweenKeys);
-            }
-        }
-
-        public static readonly SendPKeyEntry[] SendKeyEntries = {
             new("ENTER", 13),
             new("TAB", 9),
             new("ESC", 27),
@@ -138,7 +69,62 @@ namespace NHotPhrase.Keyboard
             new("%", 65589, "{%}"),
             new("~", 13, "{ENTER}"),
             new("(", 40, "{(}"),
-            new(")", 41, "{)}"),
+            new(")", 41, "{)}")
         };
+
+        public static ISendKeys Singleton
+        {
+            get
+            {
+                if (_singleton == null)
+                    throw new ArgumentNullException(nameof(Singleton),
+                        "Singleton must be set before using these methods");
+                return _singleton;
+            }
+            set => _singleton = value;
+        }
+
+        public static void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
+        {
+            var keys = new List<PKey>();
+            for (var i = 0; i < backspaceCount; i++)
+                keys.Add(PKey.Back);
+            Singleton.SendKeysAndWait(keys, millisecondsBetweenKeys);
+        }
+
+        public static List<string> MakeReadyForSending(this string target, int splitLength = 8)
+        {
+            if (string.IsNullOrEmpty(target))
+                return new List<string>();
+
+            foreach (var keyword in SendKeyEntries.Where(k => !string.IsNullOrEmpty(k.ReplaceWith)))
+                target = target.Replace(keyword.Name, "⌂" + keyword.ReplaceWith + "⌂");
+
+            var list = target.Split('⌂', StringSplitOptions.RemoveEmptyEntries).ToList();
+            while (list.Any(p => p.Length > splitLength))
+                for (var i = 0; i < list.Count; i++)
+                {
+                    if (list[i].Length <= splitLength) continue;
+
+                    var pieces = list[i].SplitInTwo();
+                    list.RemoveAt(i);
+                    list.InsertRange(i, pieces);
+                }
+
+            return list;
+        }
+
+        public static void SendString(this string textToSend, int millisecondsBetweenKeys = 2)
+        {
+            var textParts = textToSend.MakeReadyForSending();
+            textParts.SendStrings(millisecondsBetweenKeys);
+        }
+
+        public static void SendStrings(this IList<string> textPartsToSend, int millisecondsBetweenKeys = 2)
+        {
+            if (textPartsToSend.Count <= 0) return;
+
+            foreach (var part in textPartsToSend) Singleton.SendKeysAndWait(part, millisecondsBetweenKeys);
+        }
     }
 }

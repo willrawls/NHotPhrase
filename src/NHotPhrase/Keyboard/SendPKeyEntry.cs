@@ -1,4 +1,6 @@
-﻿namespace NHotPhrase.Keyboard
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace NHotPhrase.Keyboard
 {
     public class SendPKeyEntry
     {
@@ -11,6 +13,13 @@
             Name = name;
             Number = number;
             ReplaceWith = replaceWith;
+        }
+
+        public string SendKeysText()
+        {
+            if (string.IsNullOrEmpty(ReplaceWith))
+                return "{" + Name + "}";
+            return ReplaceWith;
         }
     }
 }

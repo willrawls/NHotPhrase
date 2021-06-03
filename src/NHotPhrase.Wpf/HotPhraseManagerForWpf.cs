@@ -20,8 +20,7 @@ namespace NHotPhrase.Wpf
         private static ISendKeys _singleton;
         public static ISendKeys Singleton => _singleton ??= new HotPhraseManagerForWpf();
 
-        public static VirtualKeyCode[] MakePKeysReadyForInputSimulator(List<PKey> keys)
-        {
+        public static VirtualKeyCode[] MakePKeysReadyForInputSimulator(List<PKey> keys){
             var convertedKeys = new VirtualKeyCode[keys.Count];
             for (var i = 0; i < keys.Count; i++)
             {
@@ -56,6 +55,19 @@ namespace NHotPhrase.Wpf
         {
             foreach (var part in stringsToSend) 
                 SendKeysAndWait(part, millisecondThreadSleep);
+            return true;
+        }
+
+        public bool SendKeysAndWait(List<PKey> keysToSend, int millisecondThreadSleep)
+        {
+            if (keysToSend is not {Count: > 0}) 
+                return true;
+            var inputSimulatorKeys = MakePKeysReadyForInputSimulator(keysToSend);
+            foreach(var key in inputSimulatorKeys)
+            {
+                InputSimulator.Keyboard.KeyPress(key);
+                Thread.Sleep(MillisecondsBetweenKeyPress);
+            }
             return true;
         }
     }

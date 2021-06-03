@@ -26,7 +26,9 @@ namespace NHotPhrase.Keyboard
         {
             // ReSharper disable once JoinNullCheckWithUsage
             if (keyboardPressedEvent == null)
+#pragma warning disable IDE0016 // Use 'throw' expression
                 throw new ArgumentNullException(nameof(keyboardPressedEvent));
+#pragma warning restore IDE0016 // Use 'throw' expression
 
             WindowsHookHandle = IntPtr.Zero;
             User32LibraryHandle = IntPtr.Zero;
@@ -108,7 +110,9 @@ namespace NHotPhrase.Keyboard
         }
 
         // ReSharper disable once UnusedParameter.Global
+#pragma warning disable IDE0060 // Remove unused parameter
         public bool HandleKeyEvent(LowLevelKeyboardInputEvent lowLevelKeyboardInputEvent, GlobalKeyboardHookEventArgs eventArguments)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             if (KeyboardPressedEvent == null)
                 return false;

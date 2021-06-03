@@ -127,8 +127,6 @@ namespace NHotPhrase.Wpf.Demo
         {
             if (Fred.IsChecked == true)
             {
-                HotPhraseManager?.Dispose();
-                HotPhraseManager = null;
                 Fred.IsChecked = false;
             }
             else
