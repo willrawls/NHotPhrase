@@ -51,7 +51,6 @@ namespace NHotPhrase.WindowsForms.Tests
             void HotGlobalKeyboardHookEventArgs(object _, GlobalKeyboardHookEventArgs e) => e.Handled = true;
             var hotPhraseManager = KeyboardManager.Factory(HotGlobalKeyboardHookEventArgs);
             
-
             hotPhraseManager.AddOrReplace(hotPhrase);
             return hotPhraseManager;
         }

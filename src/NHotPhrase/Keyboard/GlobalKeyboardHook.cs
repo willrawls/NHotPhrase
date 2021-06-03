@@ -8,7 +8,7 @@ namespace NHotPhrase.Keyboard
     //Based on https://gist.github.com/Stasonix
     public class GlobalKeyboardHook : IDisposable
     {
-        public const int WH_KEYBOARD_LL = 13;
+        public const int WhKeyboardLl = 13;
         public IntPtr User32LibraryHandle;
         public IntPtr WindowsHookHandle;
         public HookProcDelegate HookProc;
@@ -20,6 +20,7 @@ namespace NHotPhrase.Keyboard
         /// <summary>
         /// </summary>
         /// <param name="registeredKeys">PKey that should trigger logging. Pass null for full logging.</param>
+        /// <param name="keyboardPressedEvent"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public GlobalKeyboardHook(EventHandler<GlobalKeyboardHookEventArgs> keyboardPressedEvent)
         {
@@ -38,7 +39,7 @@ namespace NHotPhrase.Keyboard
                     $"Failed to load library 'User32.dll'. Error {errorCode}: {new Win32Exception(Marshal.GetLastWin32Error()).Message}.");
             }
 
-            WindowsHookHandle = Win32.SetWindowsHookEx(WH_KEYBOARD_LL, HookProc, User32LibraryHandle, 0);
+            WindowsHookHandle = Win32.SetWindowsHookEx(WhKeyboardLl, HookProc, User32LibraryHandle, 0);
             if (WindowsHookHandle == IntPtr.Zero)
             {
                 var errorCode = Marshal.GetLastWin32Error();

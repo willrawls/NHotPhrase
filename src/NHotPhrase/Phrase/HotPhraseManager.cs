@@ -8,7 +8,7 @@ namespace NHotPhrase.Phrase
     {
         protected HotPhraseManager()
         {
-            Keyboard = new KeyboardManager();
+            Keyboard = KeyboardManager.Factory(OnManagerKeyboardPressEvent);
         }
 
         public Guid ID { get; } = Guid.NewGuid();
