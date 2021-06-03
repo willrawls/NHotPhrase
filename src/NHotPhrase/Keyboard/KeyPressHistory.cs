@@ -9,7 +9,7 @@ namespace NHotPhrase.Keyboard
         public int MaxHistoryLength { get; set; } = 8;
         public int ClearAfterThisManySeconds { get; set; } = 5;
 
-        public static object SyncRoot = new();
+        public static readonly object SyncRoot = new();
 
         public KeyHistory()
         {

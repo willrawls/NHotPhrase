@@ -18,8 +18,7 @@ namespace NHotPhrase.WindowsForms.Tests
         [TestMethod]
         public void ShiftShiftAnySingleDigit_IsAMatch_True()
         {
-            var data = new KeySequence("Fred",
-                    new[] {PKey.Shift, PKey.Shift}, (sender, args) => args.Handled = true)
+            var data = new KeySequence("Fred", new List<PKey>() {PKey.Shift, PKey.Shift}, (sender, args) => args.Handled = true)
                 .FollowedByWildcards(WildcardMatchType.Digits, 1);
 
             var history = new List<PKey>

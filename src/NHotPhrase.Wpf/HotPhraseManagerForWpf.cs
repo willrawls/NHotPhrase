@@ -1,50 +1,62 @@
-﻿/*
-using System;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Interop;
+﻿using System.Collections.Generic;
+using System.Threading;
+using WindowsInput;
+using WindowsInput.Native;
+using NHotPhrase.Keyboard;
 using NHotPhrase.Phrase;
 
 namespace NHotPhrase.Wpf
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Microsoft.Design",
-        "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
-        Justification = "This is a singleton; disposing it would break it")]
-    public class HotPhraseManagerForWpf : HotPhraseManager
+    public class HotPhraseManagerForWpf : HotPhraseManager, ISendKeys
     {
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        public readonly HwndSource _source;
-
-        public static bool ExecuteCommand(InputBinding binding)
+        public HotPhraseManagerForWpf()
         {
-            var command = binding.Command;
-            var parameter = binding.CommandParameter;
-            var target = binding.CommandTarget;
+            SendPKeys.Singleton = this;
+        }
 
-            if (command == null)
-                return false;
+        public int MillisecondsBetweenKeyPress { get; set; } = 1;
+        public InputSimulator InputSimulator { get; set; } = new();
 
-            var routedCommand = command as RoutedCommand;
-            if (routedCommand != null)
+        private static ISendKeys _singleton;
+        public static ISendKeys Singleton => _singleton ??= new HotPhraseManagerForWpf();
+
+        public static VirtualKeyCode[] MakePKeysReadyForInputSimulator(List<PKey> keys)
+        {
+            var convertedKeys = new VirtualKeyCode[keys.Count];
+            for (var i = 0; i < keys.Count; i++)
             {
-                if (routedCommand.CanExecute(parameter, target))
-                {
-                    routedCommand.Execute(parameter, target);
-                    return true;
-                }
+                convertedKeys[i] = (VirtualKeyCode) keys[i];
             }
-            else
+
+            return convertedKeys;
+        }
+
+        public bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keysToSend)
+        {
+            if (keysToSend is not {Count: > 0}) 
+                return true;
+            var inputSimulatorKeys = MakePKeysReadyForInputSimulator(keysToSend);
+            foreach(var key in inputSimulatorKeys)
             {
-                if (command.CanExecute(parameter))
-                {
-                    command.Execute(parameter);
-                    return true;
-                }
+                InputSimulator.Keyboard.KeyPress(key);
+                Thread.Sleep(MillisecondsBetweenKeyPress);
             }
-            return false;
+            return true;
+        }
+
+        public bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep = 2)
+        {
+            InputSimulator.Keyboard.TextEntry(stringToSend);
+            if(millisecondThreadSleep > 0)
+                Thread.Sleep(millisecondThreadSleep);
+            return true;
+        }
+
+        public bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep = 2)
+        {
+            foreach (var part in stringsToSend) 
+                SendKeysAndWait(part, millisecondThreadSleep);
+            return true;
         }
     }
 }
-*/

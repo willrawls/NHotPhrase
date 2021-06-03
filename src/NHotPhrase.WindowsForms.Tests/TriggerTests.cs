@@ -10,8 +10,8 @@ namespace NHotPhrase.WindowsForms.Tests
     [TestClass]
     public class TriggerTests
     {
-        public static PKey[] RControl3Times = new[] {PKey.RControlKey, PKey.RControlKey, PKey.RControlKey};
-        public static PKey[] Shift3Times = new[] {PKey.Shift, PKey.Shift, PKey.Shift};
+        public static readonly List<PKey> RControl3Times = new() {PKey.RControlKey, PKey.RControlKey, PKey.RControlKey};
+        public static readonly List<PKey> Shift3Times = new() {PKey.Shift, PKey.Shift, PKey.Shift};
 
         [TestMethod]
         public void RControl3Times_IsAMatch_True()
@@ -197,7 +197,7 @@ namespace NHotPhrase.WindowsForms.Tests
 
         public static void TestSequence(List<PKey> simulatedHistory, List<PKey> sequence, bool expected)
         {
-            var hotPhraseKeySequence = new KeySequence("Fred", sequence.ToArray(), (sender, args) => args.Handled = true);
+            var hotPhraseKeySequence = new KeySequence("Fred", sequence, (sender, args) => args.Handled = true);
             var keyHistory = new KeyHistory(8, 8, DateTime.Now, simulatedHistory.ToList());
             var actual = hotPhraseKeySequence.IsAMatch(keyHistory, out var wildcards);
             if (actual && !expected)
@@ -221,8 +221,11 @@ namespace NHotPhrase.WindowsForms.Tests
             return list.Aggregate("", (current, item) => current + (" " + item));
         }
 
-        public static List<PKey> PKeyToNotGenerateRandomly = null;
-        public static Random Random = new Random();
+#pragma warning disable CA2211 // Non-constant fields should not be visible
+        public static List<PKey> PKeyToNotGenerateRandomly;
+#pragma warning restore CA2211 // Non-constant fields should not be visible
+
+        public static readonly Random Random = new();
         public static PKey RandomKey(PKey[] butNotThesePKey)
         {
             if (PKeyToNotGenerateRandomly == null)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NHotPhrase.Phrase;
 
@@ -23,12 +24,12 @@ namespace NHotPhrase.Keyboard
             EventHandler<PhraseEventArguments> hotPhraseEventArgs, 
             int wildcardCount, 
             WildcardMatchType matchType, 
-            params PKey[] keys)
+            List<PKey> keys)
         {
             if (hotPhraseEventArgs == null)
                 throw new ArgumentNullException(nameof(hotPhraseEventArgs));
 
-            if (keys == null || keys.Length == 0)
+            if (keys == null || keys.Count == 0)
                 throw new ArgumentNullException(nameof(keys));
 
             var hotPhraseKeySequence = new KeySequence(Guid.NewGuid().ToString(), keys, hotPhraseEventArgs);
@@ -44,12 +45,12 @@ namespace NHotPhrase.Keyboard
             return this;
         }
 
-        public KeyboardManager AddOrReplace(string name, PKey[] keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
+        public KeyboardManager AddOrReplace(string name, List<PKey> keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
         {
             if (hotPhraseEventArgs == null)
                 throw new ArgumentNullException(nameof(hotPhraseEventArgs));
 
-            if (keys == null || keys.Length == 0)
+            if (keys == null || keys.Count == 0)
                 throw new ArgumentNullException(nameof(keys));
 
             if (string.IsNullOrEmpty(name))
@@ -77,6 +78,7 @@ namespace NHotPhrase.Keyboard
         public void Dispose()
         {
             Hook?.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public static KeyboardManager Factory(

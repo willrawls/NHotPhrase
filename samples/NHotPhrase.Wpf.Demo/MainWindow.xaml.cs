@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -13,8 +14,10 @@ namespace NHotPhrase.Wpf.Demo
     public partial class MainWindow : INotifyPropertyChanged
     {
         public HotPhraseManager HotPhraseManager { get; set; }
-        public static object SyncRoot = new();
+        public static readonly object SyncRoot = new();
+#pragma warning disable CA2211 // Non-constant fields should not be visible
         public static bool UiChanging;
+#pragma warning restore CA2211 // Non-constant fields should not be visible
 
         public MainWindow()
         {
@@ -24,7 +27,7 @@ namespace NHotPhrase.Wpf.Demo
         private void SetupHotPhrases()
         {
             HotPhraseManager?.Dispose();
-            HotPhraseManager = new HotPhraseManager();
+            HotPhraseManager = new HotPhraseManagerForWpf();
 
             HotPhraseManager.Keyboard.AddOrReplace(
                 KeySequence 
@@ -43,7 +46,9 @@ namespace NHotPhrase.Wpf.Demo
             );
 
             // Use the NHotkey like syntax if you like
-            HotPhraseManager.Keyboard.AddOrReplace("Decrement", new[] {PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back}, OnDecrement);
+            HotPhraseManager.Keyboard.AddOrReplace("Decrement", 
+                new List<PKey>() {PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back}, 
+                OnDecrement);
 
             // Or spell it out
             HotPhraseManager.Keyboard.AddOrReplace(
@@ -60,16 +65,18 @@ namespace NHotPhrase.Wpf.Demo
             HotPhraseManager.Keyboard.AddOrReplace(
                 KeySequence
                     .Factory()                                             // <<< Name isn't necessary and defaults to a new Guid
-                    .WhenKeysPressed(PKey.CapsLock, PKey.CapsLock, PKey.N) // <<< Specify the entire pKey sequence at once
+                    .WhenKeysPressed(new List<PKey>() { PKey.CapsLock, PKey.CapsLock, PKey.N }) // <<< Specify the entire pKey sequence at once
                     .FollowedByWildcards(WildcardMatchType.Digits, 1)      // <<< User must press 0-9 one time and only one time to match
                     .ThenCall(OnWriteTextWithWildcards)                    // <<< That one digit passed to this function
             );
 
             // Here's a near equivalent in a single line call syntax except any two a-Z or 0-9 characters match after the first static 3
-            HotPhraseManager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, PKey.CapsLock, PKey.CapsLock, PKey.M);
+            HotPhraseManager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 
+                2, WildcardMatchType.AlphaNumeric, 
+                new List<PKey>() {PKey.CapsLock, PKey.CapsLock, PKey.M});
         }
         
-        private void OnWriteTextFromTextBox(object? sender, PhraseEventArguments e)
+        private void OnWriteTextFromTextBox(object sender, PhraseEventArguments e)
         {
             SendPKeys.SendBackspaces(3);
             
@@ -79,7 +86,7 @@ namespace NHotPhrase.Wpf.Demo
             SendPKeys.Singleton.SendKeysAndWait(textPartsToSend, 2);
         }
 
-        public void OnWriteTextWithWildcards(object? sender, PhraseEventArguments e)
+        public void OnWriteTextWithWildcards(object sender, PhraseEventArguments e)
         {
             if (e.State.MatchResult == null)
                 return;  
@@ -168,7 +175,7 @@ namespace NHotPhrase.Wpf.Demo
             }
         }
 
-        public void Test()
+        public static void Test()
         {
             MessageBox.Show("Test");
         }
@@ -184,7 +191,7 @@ namespace NHotPhrase.Wpf.Demo
         public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 using NHotPhrase.Phrase;
@@ -9,8 +10,8 @@ namespace NHotPhrase.WindowsForms.Demo
     {
 
         public HotPhraseManager Manager { get; set; }
-        public static object SyncRoot = new();
-        public static bool UiChanging;
+        public static readonly object SyncRoot = new();
+        public static bool UiChanging { get; set; }
 
         public delegate void CheckedChangedDelegate(object sender, System.EventArgs e);
 
@@ -23,7 +24,7 @@ namespace NHotPhrase.WindowsForms.Demo
         private void SetupHotPhrases()
         {
             Manager?.Dispose();
-            Manager = new HotPhraseManager();
+            Manager = new HotPhraseManagerForWinForms();
 
             Manager.Keyboard.AddOrReplace(
                 KeySequence 
@@ -42,7 +43,7 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Use the NHotkey like syntax if you like
-            Manager.Keyboard.AddOrReplace("Decrement", new[] {PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back}, OnDecrement);
+            Manager.Keyboard.AddOrReplace("Decrement", new List<PKey> {PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back}, OnDecrement);
 
             // Or spell it out
             Manager.Keyboard.AddOrReplace(
@@ -59,16 +60,16 @@ namespace NHotPhrase.WindowsForms.Demo
             Manager.Keyboard.AddOrReplace(
                 KeySequence
                     .Factory()                                             // <<< Name isn't necessary and defaults to a new Guid
-                    .WhenKeysPressed(PKey.CapsLock, PKey.CapsLock, PKey.N) // <<< Specify the entire pKey sequence at once
+                    .WhenKeysPressed(new List<PKey> { PKey.CapsLock, PKey.CapsLock, PKey.N }) // <<< Specify the entire pKey sequence at once
                     .FollowedByWildcards(WildcardMatchType.Digits, 1)      // <<< User must press 0-9 one time and only one time to match
                     .ThenCall(OnWriteTextWithWildcards)                    // <<< That one digit passed to this function
             );
 
             // Here's a near equivalent in a single line call syntax except any two a-Z or 0-9 characters match after the first static 3
-            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, PKey.CapsLock, PKey.CapsLock, PKey.M);
+            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, new List<PKey> {PKey.CapsLock, PKey.CapsLock, PKey.M });
         }
 
-        private void OnWriteTextFromTextBox(object? sender, PhraseEventArguments e)
+        private void OnWriteTextFromTextBox(object sender, PhraseEventArguments e)
         {
             SendPKeys.SendBackspaces(3);
 
@@ -78,7 +79,7 @@ namespace NHotPhrase.WindowsForms.Demo
             SendPKeys.Singleton.SendKeysAndWait(textPartsToSend, 2);
         }
 
-        public static void OnWriteTextWithWildcards(object? sender, PhraseEventArguments e)
+        public static void OnWriteTextWithWildcards(object sender, PhraseEventArguments e)
         {
             if (e.State.MatchResult == null)
                 return;  
@@ -131,11 +132,11 @@ namespace NHotPhrase.WindowsForms.Demo
         public int _value;
         public int Value
         {
-            get => Value;
+            get => _value;
             set
             {
-                Value = value;
-                lblValue.Text = Value.ToString();
+                _value = value;
+                lblValue.Text = _value.ToString();
             }
         }
 

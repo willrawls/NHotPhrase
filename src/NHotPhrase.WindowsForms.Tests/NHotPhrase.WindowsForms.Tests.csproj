@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <IsPackable>false</IsPackable>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>

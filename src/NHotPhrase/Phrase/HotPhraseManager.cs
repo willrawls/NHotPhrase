@@ -4,15 +4,17 @@ using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.Phrase
 {
-    public class HotPhraseManager : IDisposable
+    public abstract class HotPhraseManager : IDisposable
     {
+        protected HotPhraseManager()
+        {
+            Keyboard = new KeyboardManager();
+        }
+
+        public Guid ID { get; } = Guid.NewGuid();
+
         public KeyboardManager Keyboard { get; set; }
         public KeyHistory History { get; set; } = new();
-
-        public HotPhraseManager()
-        {
-            Keyboard = KeyboardManager.Factory(OnManagerKeyboardPressEvent);
-        }
 
         public void OnManagerKeyboardPressEvent(object sender, GlobalKeyboardHookEventArgs e)
         {
@@ -26,7 +28,7 @@ namespace NHotPhrase.Phrase
 
                 Debug.WriteLine($"Trigger {trigger.Name}");
 
-                if(!string.IsNullOrEmpty(matchResult.Value))
+                if(!string.IsNullOrEmpty(matchResult?.Value))
                     Debug.WriteLine($"  Wilds {matchResult.Value}");
 
                 History.Clear();
@@ -36,7 +38,13 @@ namespace NHotPhrase.Phrase
 
         public void Dispose()
         {
+            if (SendPKeys.Singleton?.ID == ID)
+            {
+                SendPKeys.Singleton = null;
+            }
+
             Keyboard?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 

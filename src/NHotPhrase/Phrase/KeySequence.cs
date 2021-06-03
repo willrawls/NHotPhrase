@@ -16,7 +16,7 @@ namespace NHotPhrase.Phrase
         public PhraseActionList ActionList { get; set; } = new();
 
 
-        public KeySequence(string name, PKey[] keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
+        public KeySequence(string name, List<PKey> keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
         {
             Name = name;
             Sequence.AddRange(keys);
@@ -169,7 +169,7 @@ namespace NHotPhrase.Phrase
             return this;
         }
 
-        public KeySequence WhenKeysPressed(params PKey[] keys)
+        public KeySequence WhenKeysPressed(List<PKey> keys)
         {
             Sequence.Clear();
             Sequence.AddRange(keys);

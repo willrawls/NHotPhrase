@@ -6,11 +6,11 @@ using NHotPhrase.Phrase;
 
 namespace NHotPhrase.WindowsForms
 {
-    public class SendPKeysThroughSendKeys : ISendKeys
+    public class HotPhraseManagerForWinForms : HotPhraseManager, ISendKeys
     {
-        static SendPKeysThroughSendKeys()
+        public HotPhraseManagerForWinForms() 
         {
-            SendPKeys.Singleton = new SendPKeysThroughSendKeys();
+            SendPKeys.Singleton = this;
         }
 
         public bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keysToSend)

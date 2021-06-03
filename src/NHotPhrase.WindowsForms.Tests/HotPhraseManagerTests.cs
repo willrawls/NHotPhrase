@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHotPhrase.Keyboard;
 using NHotPhrase.Phrase;
@@ -42,12 +43,12 @@ namespace NHotPhrase.WindowsForms.Tests
 
         private static KeyboardManager SetupHotPhraseManagerTest(out KeySequence hotPhrase)
         {
-            var keys = new[] {PKey.ControlKey, PKey.ControlKey, PKey.ControlKey};
+            var keys = new List<PKey> {PKey.ControlKey, PKey.ControlKey, PKey.ControlKey};
 
-            void hotPhraseEventArgs(object? _, PhraseEventArguments e) => e.Handled = true;
+            void hotPhraseEventArgs(object _, PhraseEventArguments e) => e.Handled = true;
             hotPhrase = new KeySequence("RightControl3TimesInARow", keys, hotPhraseEventArgs);
 
-            void HotGlobalKeyboardHookEventArgs(object? _, GlobalKeyboardHookEventArgs e) => e.Handled = true;
+            void HotGlobalKeyboardHookEventArgs(object _, GlobalKeyboardHookEventArgs e) => e.Handled = true;
             var hotPhraseManager = KeyboardManager.Factory(HotGlobalKeyboardHookEventArgs);
             
 
