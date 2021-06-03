@@ -125,9 +125,16 @@ namespace NHotPhrase.Wpf.Demo
 
         private void OnTogglePhraseActivation(object sender, PhraseEventArguments e)
         {
-            lock(SyncRoot)
+            if (Fred.IsChecked == true)
             {
-                IsHotkeyManagerEnabled = !IsHotkeyManagerEnabled;
+                HotPhraseManager?.Dispose();
+                HotPhraseManager = null;
+                Fred.IsChecked = false;
+            }
+            else
+            {
+                SetupHotPhrases();
+                Fred.IsChecked = true;
             }
         }
 
@@ -160,27 +167,24 @@ namespace NHotPhrase.Wpf.Demo
         public DelegateCommand _testCommand;
         public ICommand TestCommand => _testCommand ??= new DelegateCommand(Test);
 
-        public bool IsHotkeyManagerEnabled
+        public void CheckBoxChecked(object sender, RoutedEventArgs e)
         {
-            get => HotPhraseManager != null;
-            set
-            {
-                if (value)
-                    SetupHotPhrases();
-                else
-                {
-                    HotPhraseManager?.Dispose();
-                    HotPhraseManager = null;
-                }
-            }
+            SetupHotPhrases();
+            e.Handled = true;
+        }
+
+        public void CheckBoxUnchecked(object sender, RoutedEventArgs e)
+        {
+            HotPhraseManager?.Dispose();
+            HotPhraseManager = null;
+            e.Handled = true;
         }
 
         public static void Test()
         {
             MessageBox.Show("Test");
         }
-
-
+        
         public void Negate()
         {
             Value = -Value;

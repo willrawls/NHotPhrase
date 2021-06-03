@@ -24,6 +24,7 @@ namespace NHotPhrase.Keyboard
         /// <exception cref="ArgumentNullException"></exception>
         public GlobalKeyboardHook(EventHandler<GlobalKeyboardHookEventArgs> keyboardPressedEvent)
         {
+            // ReSharper disable once JoinNullCheckWithUsage
             if (keyboardPressedEvent == null)
                 throw new ArgumentNullException(nameof(keyboardPressedEvent));
 
@@ -106,6 +107,7 @@ namespace NHotPhrase.Keyboard
                 : Win32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         }
 
+        // ReSharper disable once UnusedParameter.Global
         public bool HandleKeyEvent(LowLevelKeyboardInputEvent lowLevelKeyboardInputEvent, GlobalKeyboardHookEventArgs eventArguments)
         {
             if (KeyboardPressedEvent == null)
