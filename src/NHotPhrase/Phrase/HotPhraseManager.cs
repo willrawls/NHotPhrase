@@ -1,24 +1,32 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.Phrase
 {
     public abstract class HotPhraseManager : IDisposable
     {
-        protected HotPhraseManager()
-        {
-            Keyboard = KeyboardManager.Factory(OnManagerKeyboardPressEvent);
-        }
-
         public Guid ID { get; } = Guid.NewGuid();
 
         public KeyboardManager Keyboard { get; set; }
         public KeyHistory History { get; set; } = new();
 
+        public static object SyncRoot { get; } = new();
+
+        protected HotPhraseManager()
+        {
+            Keyboard = KeyboardManager.Factory(OnManagerKeyboardPressEvent);
+        }
+
         public void OnManagerKeyboardPressEvent(object sender, GlobalKeyboardHookEventArgs e)
         {
-            if (e.KeyboardState == KeyboardState.KeyUp)
+            if (e.KeyboardState != KeyboardState.KeyUp)
+                return;
+
+            if (!Monitor.TryEnter(SyncRoot)) return;
+
+            try
             {
                 Debug.WriteLine($"PKey {e.KeyboardData.PKey}");
                 History.AddKeyPress(e.KeyboardData.PKey);
@@ -28,24 +36,24 @@ namespace NHotPhrase.Phrase
 
                 Debug.WriteLine($"Trigger {trigger.Name}");
 
-                if(!string.IsNullOrEmpty(matchResult?.Value))
+                if (!string.IsNullOrEmpty(matchResult?.Value))
                     Debug.WriteLine($"  Wilds {matchResult.Value}");
 
                 History.Clear();
                 trigger.Run(matchResult);
             }
+            finally
+            {
+                Monitor.Exit(SyncRoot);
+            }
         }
 
         public void Dispose()
         {
-            if (SendPKeys.Singleton?.ID == ID)
-            {
-                SendPKeys.Singleton = null;
-            }
+            if (SendPKeys.Singleton?.ID == ID) SendPKeys.Singleton = null;
 
             Keyboard?.Dispose();
             GC.SuppressFinalize(this);
         }
     }
-
 }

@@ -9,65 +9,65 @@ namespace NHotPhrase.Wpf
 {
     public class HotPhraseManagerForWpf : HotPhraseManager, ISendKeys
     {
+        private static ISendKeys _singleton;
+
+        public int MillisecondsBetweenKeyPress { get; set; } = 1;
+        public InputSimulator InputSimulator { get; set; } = new();
+        public static ISendKeys Singleton => _singleton ??= new HotPhraseManagerForWpf();
+
         public HotPhraseManagerForWpf()
         {
             SendPKeys.Singleton = this;
         }
 
-        public int MillisecondsBetweenKeyPress { get; set; } = 1;
-        public InputSimulator InputSimulator { get; set; } = new();
-
-        private static ISendKeys _singleton;
-        public static ISendKeys Singleton => _singleton ??= new HotPhraseManagerForWpf();
-
-        public static VirtualKeyCode[] MakePKeysReadyForInputSimulator(List<PKey> keys){
+        public static VirtualKeyCode[] MakePKeysReadyForInputSimulator(List<PKey> keys)
+        {
             var convertedKeys = new VirtualKeyCode[keys.Count];
-            for (var i = 0; i < keys.Count; i++)
-            {
-                convertedKeys[i] = (VirtualKeyCode) keys[i];
-            }
+            for (var i = 0; i < keys.Count; i++) convertedKeys[i] = (VirtualKeyCode) keys[i];
 
             return convertedKeys;
         }
 
         public bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keysToSend)
         {
-            if (keysToSend is not {Count: > 0}) 
+            if (keysToSend is not {Count: > 0})
                 return true;
             var inputSimulatorKeys = MakePKeysReadyForInputSimulator(keysToSend);
-            foreach(var key in inputSimulatorKeys)
+            foreach (var key in inputSimulatorKeys)
             {
                 InputSimulator.Keyboard.KeyPress(key);
                 Thread.Sleep(MillisecondsBetweenKeyPress);
             }
+
             return true;
         }
 
         public bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep = 2)
         {
             InputSimulator.Keyboard.TextEntry(stringToSend);
-            if(millisecondThreadSleep > 0)
+            if (millisecondThreadSleep > 0)
                 Thread.Sleep(millisecondThreadSleep);
             return true;
         }
 
         public bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep = 2)
         {
-            foreach (var part in stringsToSend) 
+            foreach (var part in stringsToSend)
                 SendKeysAndWait(part, millisecondThreadSleep);
             return true;
         }
 
         public bool SendKeysAndWait(List<PKey> keysToSend, int millisecondThreadSleep)
         {
-            if (keysToSend is not {Count: > 0}) 
+            if (keysToSend is not {Count: > 0})
                 return true;
             var inputSimulatorKeys = MakePKeysReadyForInputSimulator(keysToSend);
-            foreach(var key in inputSimulatorKeys)
+            foreach (var key in inputSimulatorKeys)
             {
                 InputSimulator.Keyboard.KeyPress(key);
                 Thread.Sleep(MillisecondsBetweenKeyPress);
             }
+
             return true;
         }
     }
