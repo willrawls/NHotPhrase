@@ -9,7 +9,7 @@
 
   <PropertyGroup Label="Package properties">
     <Description>A managed library to handle globally availble "hot phrases" in Windows Forms. NOTE: this package doesn't contain a concrete HotkeyManager implementation; you should add NHotPhrase.WindowsForms package to get one.</Description>
-    <Version>0.2.0</Version>
+    <Version>1.0.0</Version>
     <Authors>William Rawls</Authors>
     <Company>William Rawls</Company>
   </PropertyGroup>
