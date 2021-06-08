@@ -9,9 +9,9 @@ namespace NHotPhrase.WindowsForms
 {
     public class HotPhraseManagerForWinForms : HotPhraseManager, ISendKeys
     {
-        public HotPhraseManagerForWinForms() 
+        public HotPhraseManagerForWinForms()
         {
-            SendPKeys.Singleton = this;
+            KeySender = new SendPKeys(this);
         }
 
         public bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keysToSend)
@@ -47,9 +47,9 @@ namespace NHotPhrase.WindowsForms
             return true;
         }
 
-        public static string ToSendKeysText(PKey pKey)
+        public string ToSendKeysText(PKey pKey)
         {
-            var keyword = SendPKeys.SendKeyEntries.FirstOrDefault(k => k.Number == (int) pKey);
+            var keyword = KeySender.SendKeyEntries.FirstOrDefault(k => k.Number == (int) pKey);
             return keyword != null 
                 ? keyword.SendKeysText()
                 : pKey.ToString();

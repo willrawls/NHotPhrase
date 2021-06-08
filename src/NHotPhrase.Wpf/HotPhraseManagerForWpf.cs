@@ -9,15 +9,12 @@ namespace NHotPhrase.Wpf
 {
     public class HotPhraseManagerForWpf : HotPhraseManager, ISendKeys
     {
-        private static ISendKeys _singleton;
-
         public int MillisecondsBetweenKeyPress { get; set; } = 1;
         public InputSimulator InputSimulator { get; set; } = new();
-        public static ISendKeys Singleton => _singleton ??= new HotPhraseManagerForWpf();
 
         public HotPhraseManagerForWpf()
         {
-            SendPKeys.Singleton = this;
+            KeySender = new SendPKeys(this);
         }
 
         public static VirtualKeyCode[] MakePKeysReadyForInputSimulator(List<PKey> keys)

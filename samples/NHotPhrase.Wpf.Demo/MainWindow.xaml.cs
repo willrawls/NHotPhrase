@@ -13,7 +13,7 @@ namespace NHotPhrase.Wpf.Demo
     /// </summary>
     public partial class MainWindow : INotifyPropertyChanged
     {
-        public HotPhraseManager HotPhraseManager { get; set; }
+        public HotPhraseManagerForWpf Manager { get; set; }
         public static readonly object SyncRoot = new();
 #pragma warning disable CA2211 // Non-constant fields should not be visible
         public static bool UiChanging;
@@ -26,17 +26,17 @@ namespace NHotPhrase.Wpf.Demo
 
         private void SetupHotPhrases()
         {
-            HotPhraseManager?.Dispose();
-            HotPhraseManager = new HotPhraseManagerForWpf();
+            Manager?.Dispose();
+            Manager = new HotPhraseManagerForWpf();
 
-            HotPhraseManager.Keyboard.AddOrReplace(
+            Manager.Keyboard.AddOrReplace(
                 KeySequence 
                     .Named("Toggle hot phrase activation")
                     .WhenKeyRepeats(PKey.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
             );
 
-            HotPhraseManager.Keyboard.AddOrReplace(
+            Manager.Keyboard.AddOrReplace(
                 KeySequence
                     .Named("Increment")
                     .WhenKeyPressed(PKey.ControlKey)
@@ -46,12 +46,12 @@ namespace NHotPhrase.Wpf.Demo
             );
 
             // Use the NHotkey like syntax if you like
-            HotPhraseManager.Keyboard.AddOrReplace("Decrement", 
+            Manager.Keyboard.AddOrReplace("Decrement", 
                 new List<PKey>() {PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back}, 
                 OnDecrement);
 
             // Or spell it out
-            HotPhraseManager.Keyboard.AddOrReplace(
+            Manager.Keyboard.AddOrReplace(
                 KeySequence
                     .Named("Write some text")
                     .WhenKeyRepeats(PKey.CapsLock, 2)   // <<< User must press the caps lock pKey twice
@@ -62,7 +62,7 @@ namespace NHotPhrase.Wpf.Demo
             );
 
             // Write some text plus any wildcards
-            HotPhraseManager.Keyboard.AddOrReplace(
+            Manager.Keyboard.AddOrReplace(
                 KeySequence
                     .Factory()                                             // <<< Name isn't necessary and defaults to a new Guid
                     .WhenKeysPressed(PKey.CapsLock, PKey.CapsLock, PKey.N) // <<< Specify the entire pKey sequence at once
@@ -71,19 +71,19 @@ namespace NHotPhrase.Wpf.Demo
             );
 
             // Here's a near equivalent in a single line call syntax except any two a-Z or 0-9 characters match after the first static 3
-            HotPhraseManager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 
+            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 
                 2, WildcardMatchType.AlphaNumeric, 
                 new List<PKey>() {PKey.CapsLock, PKey.CapsLock, PKey.M});
         }
         
         private void OnWriteTextFromTextBox(object sender, PhraseEventArguments e)
         {
-            SendPKeys.SendBackspaces(3);
+            Manager.KeySender.SendBackspaces(3);
             
-            var textPartsToSend = TextToSend.Text.MakeReadyForSending();
+            var textPartsToSend = Manager.KeySender.MakeReadyForSending(TextToSend.Text);
             if (textPartsToSend.Count <= 0) return;
 
-            SendPKeys.Singleton.SendKeysAndWait(textPartsToSend, 2);
+            Manager.SendKeysAndWait(textPartsToSend, 2);
         }
 
         public void OnWriteTextWithWildcards(object sender, PhraseEventArguments e)
@@ -97,17 +97,17 @@ namespace NHotPhrase.Wpf.Demo
             if (wildcardsLength == 0) return;
             
             // Send enough backspaces to cover the extra keys typed during the match
-            SendPKeys.SendBackspaces(1 + e.State.MatchResult.Value.Length);
+            Manager.KeySender.SendBackspaces(1 + e.State.MatchResult.Value.Length);
 
             // Send some strings based on the wildcard character(s)
-            $"Your wildcard is {wildcards}".SendString();
+            Manager.KeySender.SendString($"Your wildcard is {wildcards}");
             switch (e.State.MatchResult.Value.ToUpper())
             {
                 case "1":
-                    "\n\n\tThis is specific to wildcard 1\n\n".SendString();
+                    Manager.KeySender.SendString("\n\n\tThis is specific to wildcard 1\n\n");
                     break;
                 case "5":
-                    "\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n".SendString();
+                    Manager.KeySender.SendString("\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n");
                     break;
 
                 case "NE":
@@ -118,7 +118,7 @@ namespace NHotPhrase.Wpf.Demo
                     Test();
                     break;
                 default:
-                    $"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ".SendString();
+                    Manager.KeySender.SendString($"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ");
                     break;
             }
         }
@@ -173,8 +173,8 @@ namespace NHotPhrase.Wpf.Demo
 
         public void CheckBoxUnchecked(object sender, RoutedEventArgs e)
         {
-            HotPhraseManager?.Dispose();
-            HotPhraseManager = null;
+            Manager?.Dispose();
+            Manager = null;
             e.Handled = true;
         }
 

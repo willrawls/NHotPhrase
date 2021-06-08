@@ -4,11 +4,16 @@ using System.Linq;
 
 namespace NHotPhrase.Keyboard
 {
-    public static class SendPKeys
+    public class SendPKeys
     {
-        private static ISendKeys _singleton;
+        public ISendKeys Parent;
 
-        public static readonly SendPKeyEntry[] SendKeyEntries =
+        public SendPKeys(ISendKeys parent)
+        {
+            Parent = parent;
+        }
+
+        public readonly SendPKeyEntry[] SendKeyEntries =
         {
             new("ENTER", 13),
             new("TAB", 9),
@@ -72,27 +77,28 @@ namespace NHotPhrase.Keyboard
             new(")", 41, "{)}")
         };
 
-        public static ISendKeys Singleton
+        /*
+        public ISendKeys Singleton
         {
             get
             {
-                if (_singleton == null)
+                if (Parent == null)
                     throw new ArgumentNullException(nameof(Singleton),
-                        "Singleton must be set before using these methods");
-                return _singleton;
+                        "Singleton must be set through RegisterType() before being using");
+                return Parent;
             }
-            set => _singleton = value;
         }
+        */
 
-        public static void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
+        public void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
         {
             var keys = new List<PKey>();
             for (var i = 0; i < backspaceCount; i++)
                 keys.Add(PKey.Back);
-            Singleton.SendKeysAndWait(keys, millisecondsBetweenKeys);
+            Parent.SendKeysAndWait(keys, millisecondsBetweenKeys);
         }
 
-        public static List<string> MakeReadyForSending(this string target, int splitLength = 8)
+        public List<string> MakeReadyForSending(string target, int splitLength = 8)
         {
             if (string.IsNullOrEmpty(target))
                 return new List<string>();
@@ -114,17 +120,18 @@ namespace NHotPhrase.Keyboard
             return list;
         }
 
-        public static void SendString(this string textToSend, int millisecondsBetweenKeys = 2)
+        public void SendString(string textToSend, int millisecondsBetweenKeys = 2)
         {
-            var textParts = textToSend.MakeReadyForSending();
-            textParts.SendStrings(millisecondsBetweenKeys);
+            var textParts = MakeReadyForSending(textToSend);
+            SendStrings(textParts, millisecondsBetweenKeys);
         }
 
-        public static void SendStrings(this IList<string> textPartsToSend, int millisecondsBetweenKeys = 2)
+        public void SendStrings(IList<string> textPartsToSend, int millisecondsBetweenKeys = 2)
         {
             if (textPartsToSend.Count <= 0) return;
 
-            foreach (var part in textPartsToSend) Singleton.SendKeysAndWait(part, millisecondsBetweenKeys);
+            foreach (var part in textPartsToSend) 
+                Parent.SendKeysAndWait(part, millisecondsBetweenKeys);
         }
     }
 }

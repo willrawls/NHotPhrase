@@ -4,7 +4,7 @@ using NHotPhrase.Phrase;
 
 namespace NHotPhrase.Keyboard
 {
-    public interface ISendKeys
+    public interface ISendKeys : IDisposable
     {
         Guid ID { get; }
         bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keys);

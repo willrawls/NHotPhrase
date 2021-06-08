@@ -9,7 +9,7 @@ namespace NHotPhrase.WindowsForms.Demo
     public partial class DemoForm : Form
     {
 
-        public HotPhraseManager Manager { get; set; }
+        public HotPhraseManagerForWinForms Manager { get; set; }
         public static readonly object SyncRoot = new();
         public static bool UiChanging { get; set; }
 
@@ -71,15 +71,15 @@ namespace NHotPhrase.WindowsForms.Demo
 
         private void OnWriteTextFromTextBox(object sender, PhraseEventArguments e)
         {
-            SendPKeys.SendBackspaces(3);
+            Manager.KeySender.SendBackspaces(3);
 
-            var textPartsToSend = TextToSend.Text.MakeReadyForSending();
+            var textPartsToSend = Manager.KeySender.MakeReadyForSending(TextToSend.Text);
             if (textPartsToSend.Count <= 0) return;
 
-            SendPKeys.Singleton.SendKeysAndWait(textPartsToSend, 2);
+            Manager.KeySender.SendStrings(textPartsToSend, 2);
         }
 
-        public static void OnWriteTextWithWildcards(object sender, PhraseEventArguments e)
+        public void OnWriteTextWithWildcards(object sender, PhraseEventArguments e)
         {
             if (e.State.MatchResult == null)
                 return;  
@@ -90,21 +90,21 @@ namespace NHotPhrase.WindowsForms.Demo
             if (wildcardsLength == 0) return;
             
             // Send enough backspaces to cover the extra keys typed during the match
-            SendPKeys.SendBackspaces(1 + e.State.MatchResult.Value.Length);
+            Manager.KeySender.SendBackspaces(1 + e.State.MatchResult.Value.Length);
 
             // Send some strings based on the wildcard character(s)
-            $"Your wildcard is {wildcards}".SendString();
+            Manager.KeySender.SendString($"Your wildcard is {wildcards}");
             switch (e.State.MatchResult.Value.ToUpper())
             {
                 case "1":
-                    "\n\n\tThis is specific to wildcard 1\n\n".SendString();
+                    Manager.KeySender.SendString("\n\n\tThis is specific to wildcard 1\n\n");
                     break;
                 case "5":
-                    "\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n".SendString();
+                    Manager.KeySender.SendString("\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n");
                     break;
 
                 default:
-                    $"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ".SendString();
+                    Manager.KeySender.SendString($"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ");
                     break;
             }
         }

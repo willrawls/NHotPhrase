@@ -9,12 +9,13 @@ namespace NHotPhrase.Phrase
     {
         public Guid ID { get; } = Guid.NewGuid();
 
+        public SendPKeys KeySender { get; set; }
         public KeyboardManager Keyboard { get; set; }
-        public KeyHistory History { get; set; } = new();
 
+        public KeyHistory History { get; set; } = new();
         public static object SyncRoot { get; } = new();
 
-        protected HotPhraseManager()
+        public HotPhraseManager()
         {
             Keyboard = KeyboardManager.Factory(OnManagerKeyboardPressEvent);
         }
@@ -50,8 +51,7 @@ namespace NHotPhrase.Phrase
 
         public void Dispose()
         {
-            if (SendPKeys.Singleton?.ID == ID) SendPKeys.Singleton = null;
-
+            KeySender = null;
             Keyboard?.Dispose();
             GC.SuppressFinalize(this);
         }
