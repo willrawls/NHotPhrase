@@ -3,15 +3,16 @@
     <TargetFrameworks>net5.0-windows</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/willrawls/NHotPhrase</PackageProjectUrl>
-    <PackageTags>global;hotkey;windows;keyboard;hotphrase</PackageTags>
+    <PackageTags>global;hotkey;windows;keyboard;hotphrase;text;expansion;winforms;form;c#</PackageTags>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Label="Package properties">
-    <Description>A managed library to handle globally availble "hot phrases" in Windows Forms. NOTE: this package doesn't contain a concrete HotkeyManager implementation; you should add NHotPhrase.WindowsForms package to get one.</Description>
-    <Version>0.2.0</Version>
+    <Description>A managed library to handle globally available "hot phrases" in Windows. NOTE: this package doesn't contain a concrete HotPhraseManager implementation; you should add the NHotPhrase.WindowsForms or NHotPhrase.Wpf package to get the top level management for WindForm or Wpf respectively.</Description>
+    <Version>1.0.0</Version>
     <Authors>William Rawls</Authors>
-    <Company>William Rawls</Company>
+    <Company>vorzan.com</Company>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

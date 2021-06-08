@@ -4,16 +4,9 @@ using System.Linq;
 
 namespace NHotPhrase.Keyboard
 {
-    public class SendPKeys
+    public static class SendKeyHelper
     {
-        public ISendKeys Parent;
-
-        public SendPKeys(ISendKeys parent)
-        {
-            Parent = parent;
-        }
-
-        public readonly SendPKeyEntry[] SendKeyEntries =
+        public static SendPKeyEntry[] Entries { get; set; } =
         {
             new("ENTER", 13),
             new("TAB", 9),
@@ -76,40 +69,5 @@ namespace NHotPhrase.Keyboard
             new("(", 40, "{(}"),
             new(")", 41, "{)}")
         };
-
-        /*
-        public ISendKeys Singleton
-        {
-            get
-            {
-                if (Parent == null)
-                    throw new ArgumentNullException(nameof(Singleton),
-                        "Singleton must be set through RegisterType() before being using");
-                return Parent;
-            }
-        }
-        */
-
-        public void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
-        {
-            var keys = new List<PKey>();
-            for (var i = 0; i < backspaceCount; i++)
-                keys.Add(PKey.Back);
-            Parent.SendKeysAndWait(keys, millisecondsBetweenKeys);
-        }
-
-        public void SendString(string textToSend, int millisecondsBetweenKeys = 2)
-        {
-            var textParts = Parent.MakeReadyForSending(textToSend);
-            SendStrings(textParts, millisecondsBetweenKeys);
-        }
-
-        public void SendStrings(IList<string> textPartsToSend, int millisecondsBetweenKeys = 2)
-        {
-            if (textPartsToSend.Count <= 0) return;
-
-            foreach (var part in textPartsToSend) 
-                Parent.SendKeysAndWait(part, millisecondsBetweenKeys);
-        }
     }
 }
