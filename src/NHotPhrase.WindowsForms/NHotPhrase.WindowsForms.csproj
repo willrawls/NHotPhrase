@@ -3,7 +3,7 @@
     <TargetFrameworks>net5.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageTags>global;hotkey;windows;hotphrase;keyboard</PackageTags>
+    <PackageTags>global;hotkey;windows;keyboard;hotphrase;text;expansion;winforms;form;c#</PackageTags>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Label="Package properties">

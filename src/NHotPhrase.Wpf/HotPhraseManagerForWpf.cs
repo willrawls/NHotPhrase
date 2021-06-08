@@ -14,11 +14,6 @@ namespace NHotPhrase.Wpf
         public int MillisecondsBetweenKeyPress { get; set; } = 1;
         public InputSimulator InputSimulator { get; set; } = new();
 
-        public HotPhraseManagerForWpf()
-        {
-            KeySender = new SendPKeys(this);
-        }
-
         public static VirtualKeyCode[] MakePKeysReadyForInputSimulator(List<PKey> keys)
         {
             var convertedKeys = new VirtualKeyCode[keys.Count];
@@ -89,6 +84,28 @@ namespace NHotPhrase.Wpf
             return list;
         }
 
+
+        public void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
+        {
+            var keys = new List<PKey>();
+            for (var i = 0; i < backspaceCount; i++)
+                keys.Add(PKey.Back);
+            SendKeysAndWait(keys, millisecondsBetweenKeys);
+        }
+
+        public void SendString(string textToSend, int millisecondsBetweenKeys = 2)
+        {
+            var textParts = MakeReadyForSending(textToSend);
+            SendStrings(textParts, millisecondsBetweenKeys);
+        }
+
+        public void SendStrings(IList<string> textPartsToSend, int millisecondsBetweenKeys = 2)
+        {
+            if (textPartsToSend.Count <= 0) return;
+
+            foreach (var part in textPartsToSend) 
+                SendKeysAndWait(part, millisecondsBetweenKeys);
+        }
 
     }
 }

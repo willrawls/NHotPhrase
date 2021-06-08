@@ -3,6 +3,7 @@
     <TargetFrameworks>net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>global;hotkey;windows;keyboard;hotphrase;text;expansion;wpf;c#</PackageTags>
   </PropertyGroup>
   <PropertyGroup Label="Package properties">
     <Description>A managed library to handle global hotkeys in WPF applications. This package contains the concrete HotkeyManager implementation for WPF.</Description>

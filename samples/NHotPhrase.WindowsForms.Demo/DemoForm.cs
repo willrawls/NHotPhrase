@@ -71,12 +71,12 @@ namespace NHotPhrase.WindowsForms.Demo
 
         private void OnWriteTextFromTextBox(object sender, PhraseEventArguments e)
         {
-            Manager.KeySender.SendBackspaces(3);
+            Manager.SendBackspaces(3);
 
             var textPartsToSend = Manager.MakeReadyForSending(TextToSend.Text);
             if (textPartsToSend.Count <= 0) return;
 
-            Manager.KeySender.SendStrings(textPartsToSend, 2);
+            Manager.SendStrings(textPartsToSend, 2);
         }
 
         public void OnWriteTextWithWildcards(object sender, PhraseEventArguments e)
@@ -90,21 +90,21 @@ namespace NHotPhrase.WindowsForms.Demo
             if (wildcardsLength == 0) return;
             
             // Send enough backspaces to cover the extra keys typed during the match
-            Manager.KeySender.SendBackspaces(1 + e.State.MatchResult.Value.Length);
+            Manager.SendBackspaces(1 + e.State.MatchResult.Value.Length);
 
             // Send some strings based on the wildcard character(s)
-            Manager.KeySender.SendString($"Your wildcard is {wildcards}");
+            Manager.SendString($"Your wildcard is {wildcards}");
             switch (e.State.MatchResult.Value.ToUpper())
             {
                 case "1":
-                    Manager.KeySender.SendString("\n\n\tThis is specific to wildcard 1\n\n");
+                    Manager.SendString("\n\n\tThis is specific to wildcard 1\n\n");
                     break;
                 case "5":
-                    Manager.KeySender.SendString("\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n");
+                    Manager.SendString("\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n");
                     break;
 
                 default:
-                    Manager.KeySender.SendString($"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ");
+                    Manager.SendString($"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ");
                     break;
             }
         }

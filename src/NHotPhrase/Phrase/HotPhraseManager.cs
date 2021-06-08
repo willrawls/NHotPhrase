@@ -9,7 +9,7 @@ namespace NHotPhrase.Phrase
     {
         public Guid ID { get; } = Guid.NewGuid();
 
-        public SendPKeys KeySender { get; set; }
+        // public SendKeyHelper KeySender { get; set; }
         public KeyboardManager Keyboard { get; set; }
 
         public KeyHistory History { get; set; } = new();
@@ -51,7 +51,6 @@ namespace NHotPhrase.Phrase
 
         public void Dispose()
         {
-            KeySender = null;
             Keyboard?.Dispose();
             GC.SuppressFinalize(this);
         }
