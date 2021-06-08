@@ -1,6 +1,8 @@
 # NHotPhrase
 A managed library to handle global "hot phrases" in Windows Forms. 
 
+See [Home](https://github.com/willrawls/NHotPhrase/wiki) for a simplified yet customized approach.
+
 A hot phrase is a key sequence that activates a piece of your code from any other windows application. 
 Uses include anywhere you could usea global hot key.
 
