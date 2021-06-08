@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using WindowsInput;
 using WindowsInput.Native;
@@ -67,5 +69,26 @@ namespace NHotPhrase.Wpf
 
             return true;
         }
+
+        public List<string> MakeReadyForSending(string target, int splitLength = 8)
+        {
+            if (string.IsNullOrEmpty(target))
+                return new List<string>();
+
+            var list = new List<string> { target };
+            while (list.Any(p => p.Length > splitLength))
+                for (var i = 0; i < list.Count; i++)
+                {
+                    if (list[i].Length <= splitLength) continue;
+
+                    var pieces = list[i].SplitInTwo();
+                    list.RemoveAt(i);
+                    list.InsertRange(i, pieces);
+                }
+
+            return list;
+        }
+
+
     }
 }

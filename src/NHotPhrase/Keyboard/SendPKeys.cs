@@ -98,31 +98,9 @@ namespace NHotPhrase.Keyboard
             Parent.SendKeysAndWait(keys, millisecondsBetweenKeys);
         }
 
-        public List<string> MakeReadyForSending(string target, int splitLength = 8)
-        {
-            if (string.IsNullOrEmpty(target))
-                return new List<string>();
-
-            foreach (var keyword in SendKeyEntries.Where(k => !string.IsNullOrEmpty(k.ReplaceWith)))
-                target = target.Replace(keyword.Name, "⌂" + keyword.ReplaceWith + "⌂");
-
-            var list = target.Split('⌂', StringSplitOptions.RemoveEmptyEntries).ToList();
-            while (list.Any(p => p.Length > splitLength))
-                for (var i = 0; i < list.Count; i++)
-                {
-                    if (list[i].Length <= splitLength) continue;
-
-                    var pieces = list[i].SplitInTwo();
-                    list.RemoveAt(i);
-                    list.InsertRange(i, pieces);
-                }
-
-            return list;
-        }
-
         public void SendString(string textToSend, int millisecondsBetweenKeys = 2)
         {
-            var textParts = MakeReadyForSending(textToSend);
+            var textParts = Parent.MakeReadyForSending(textToSend);
             SendStrings(textParts, millisecondsBetweenKeys);
         }
 

@@ -80,7 +80,7 @@ namespace NHotPhrase.Wpf.Demo
         {
             Manager.KeySender.SendBackspaces(3);
             
-            var textPartsToSend = Manager.KeySender.MakeReadyForSending(TextToSend.Text);
+            var textPartsToSend = Manager.MakeReadyForSending(TextToSend.Text);
             if (textPartsToSend.Count <= 0) return;
 
             Manager.SendKeysAndWait(textPartsToSend, 2);
@@ -140,12 +140,16 @@ namespace NHotPhrase.Wpf.Demo
         {
             _value++;
             e.Handled = true;
+            CurrentValue.Text = _value.ToString();
+            OnPropertyChanged(nameof(Value));
         }
 
         public void OnDecrement(object sender, PhraseEventArguments e)
         {
             _value--;
             e.Handled = true;
+            CurrentValue.Text = _value.ToString();
+            OnPropertyChanged(nameof(Value));
         }
 
         public int _value;

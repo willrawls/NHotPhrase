@@ -40,8 +40,7 @@ namespace NHotPhrase.WindowsForms.Tests
             var expected = "abcde{ADD}fgyzyzyzyzyzyzyzyzyzyz@hijk.lmn";
 
             var parent = new HotPhraseManagerForWinForms();
-            var sendPKeys = new SendPKeys(parent);
-            var actual = sendPKeys.MakeReadyForSending(data, 8);
+            var actual = parent.MakeReadyForSending(data, 8);
             Assert.IsNotNull(actual);
             Assert.AreEqual(6, actual.Count);
             

@@ -73,7 +73,7 @@ namespace NHotPhrase.WindowsForms.Demo
         {
             Manager.KeySender.SendBackspaces(3);
 
-            var textPartsToSend = Manager.KeySender.MakeReadyForSending(TextToSend.Text);
+            var textPartsToSend = Manager.MakeReadyForSending(TextToSend.Text);
             if (textPartsToSend.Count <= 0) return;
 
             Manager.KeySender.SendStrings(textPartsToSend, 2);
