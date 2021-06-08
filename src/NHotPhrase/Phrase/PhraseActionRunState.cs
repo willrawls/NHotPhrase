@@ -2,12 +2,12 @@
 {
     public class PhraseActionRunState
     {
-        public HotPhraseKeySequence HotPhraseKeySequence { get; set; }
+        public KeySequence KeySequence { get; set; }
         public MatchResult MatchResult { get; set; }
 
-        public PhraseActionRunState(HotPhraseKeySequence hotPhraseKeySequence, MatchResult matchResult)
+        public PhraseActionRunState(KeySequence keySequence, MatchResult matchResult)
         {
-            HotPhraseKeySequence = hotPhraseKeySequence;
+            KeySequence = keySequence;
             MatchResult = matchResult;
         }
     }

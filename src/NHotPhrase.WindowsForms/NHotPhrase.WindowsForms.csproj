@@ -4,6 +4,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>global;hotkey;windows;hotphrase;keyboard</PackageTags>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Label="Package properties">
     <Description>A managed library to handle global hot phrases in Windows Forms applications. This package contains the concrete HotkeyManager implementation for Windows Forms.</Description>

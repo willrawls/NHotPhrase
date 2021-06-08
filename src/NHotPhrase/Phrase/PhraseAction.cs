@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.Phrase
 {
     public class PhraseAction
     {
-        public HotPhraseKeySequence Parent;
-        public EventHandler<HotPhraseEventArgs> Handler;
-        public List<Keys> KeysToSend;
-        public int MillisecondPauseBetweenKeys = 2;
+        public KeySequence Parent { get; set; }
+        public EventHandler<PhraseEventArguments> Handler { get; set; }
+        public List<PKey> KeysToSend { get; set; }
+        public int MillisecondPauseBetweenKeys { get; set; } = 2;
 
-        public PhraseAction(HotPhraseKeySequence parent, EventHandler<HotPhraseEventArgs> handler = null)
+        public static ISendKeys SendKeysProxy { get; set; }
+
+        public PhraseAction(KeySequence parent, EventHandler<PhraseEventArguments> handler = null)
         {
             Parent = parent;
             if (handler != null)
                 ThenCall(handler);
         }
 
-        public HotPhraseKeySequence ThenCall(EventHandler<HotPhraseEventArgs> handler)
+        public KeySequence ThenCall(EventHandler<PhraseEventArguments> handler)
         {
             Handler = handler;
             return Parent;
@@ -27,25 +28,21 @@ namespace NHotPhrase.Phrase
 
         public bool RunNow(PhraseActionRunState phraseActionRunState)
         {
-            var keysToSend = new List<Keys>();
+            var keysToSend = new List<PKey>();
             if(KeysToSend is {Count: > 0})
                 keysToSend.AddRange(KeysToSend);
 
             if (Handler != null)
             {
-                var hotPhraseEventArgs = new HotPhraseEventArgs(this, phraseActionRunState, keysToSend);
+                var hotPhraseEventArgs = new PhraseEventArguments(this, phraseActionRunState, keysToSend);
                 Handler(this, hotPhraseEventArgs);
 
-                keysToSend = new List<Keys>();
+                keysToSend = new List<PKey>();
                 if(hotPhraseEventArgs.KeysToSend is {Count: > 0})
                     keysToSend.AddRange(hotPhraseEventArgs.KeysToSend);
             }
 
-            if (keysToSend is not {Count: > 0}) 
-                return true;
-
-            foreach (var key in KeysToSend)
-                SendKeys.SendWait(SendKeysKeyword.KeyToSendKey(key));
+            SendKeysProxy?.SendKeysAndWait(phraseActionRunState, keysToSend);
 
             return true;
         }

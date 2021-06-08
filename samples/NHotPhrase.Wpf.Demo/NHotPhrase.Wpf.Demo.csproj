@@ -1,11 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <OutputType>WinExe</OutputType>
     <IsPackable>false</IsPackable>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\NHotPhrase.Wpf\NHotPhrase.Wpf.csproj" />
+    <ProjectReference Include="..\..\src\NHotPhrase\NHotPhrase.csproj" />
   </ItemGroup>
 </Project>

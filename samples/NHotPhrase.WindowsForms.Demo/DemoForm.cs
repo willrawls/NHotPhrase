@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 using NHotPhrase.Phrase;
@@ -9,11 +8,10 @@ namespace NHotPhrase.WindowsForms.Demo
 {
     public partial class DemoForm : Form
     {
-        public int _value;
 
-        public HotPhraseManager Manager { get; set; }
-        public static object SyncRoot = new();
-        public static bool UiChanging;
+        public HotPhraseManagerForWinForms Manager { get; set; }
+        public static readonly object SyncRoot = new();
+        public static bool UiChanging { get; set; }
 
         public delegate void CheckedChangedDelegate(object sender, System.EventArgs e);
 
@@ -26,117 +24,113 @@ namespace NHotPhrase.WindowsForms.Demo
         private void SetupHotPhrases()
         {
             Manager?.Dispose();
-            Manager = new HotPhraseManager(this);
+            Manager = new HotPhraseManagerForWinForms();
 
             Manager.Keyboard.AddOrReplace(
-                HotPhraseKeySequence
-                    .Named("Toggle phrase activation")
-                    .WhenKeyRepeats(Keys.RControlKey, 3)
+                KeySequence 
+                    .Named("Toggle hot phrase activation")
+                    .WhenKeyRepeats(PKey.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
             );
 
             Manager.Keyboard.AddOrReplace(
-                HotPhraseKeySequence
+                KeySequence
                     .Named("Increment")
-                    .WhenKeyPressed(Keys.ControlKey)
-                    .ThenKeyPressed(Keys.Shift)
-                    .ThenKeyPressed(Keys.Alt)
+                    .WhenKeyPressed(PKey.ControlKey)
+                    .ThenKeyPressed(PKey.Shift)
+                    .ThenKeyPressed(PKey.Alt)
                     .ThenCall(OnIncrement)
             );
 
-            // Spell it out long hand
-            /*
-            Manager.Keyboard.AddOrReplace(
-                HotPhraseKeySequence
-                    .Named("Decrement")
-                    .WhenKeyPressed(Keys.CapsLock)
-                    .ThenKeyPressed(Keys.CapsLock)
-                    .ThenKeyPressed(Keys.D)
-                    .ThenKeyPressed(Keys.Back)
-                    .ThenCall(OnDecrement)
-            );
-            */
-            // Or use the NHotkey like syntax 
-            Manager.Keyboard.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
+            // Use the NHotkey like syntax if you like
+            Manager.Keyboard.AddOrReplace("Decrement", new List<PKey> {PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back}, OnDecrement);
 
-            // Write some text
+            // Or spell it out
             Manager.Keyboard.AddOrReplace(
-                HotPhraseKeySequence
+                KeySequence
                     .Named("Write some text")
-                    .WhenKeyPressed(Keys.CapsLock)
-                    .ThenKeyPressed(Keys.CapsLock)
-                    .ThenKeyPressed(Keys.W)
-                    .ThenKeyPressed(Keys.R)
-                    .ThenKeyPressed(Keys.G)
-                    .ThenCall(OnWriteTextFromTextBox)
+                    .WhenKeyRepeats(PKey.CapsLock, 2)   // <<< User must press the caps lock pKey twice
+                    .ThenKeyPressed(PKey.W)             // <<<   then a W, a R and a G must be pressed
+                    .ThenKeyPressed(PKey.R)
+                    .ThenKeyPressed(PKey.G)
+                    .ThenCall(OnWriteTextFromTextBox)   // <<< When that happens, this function is called
             );
 
             // Write some text plus any wildcards
             Manager.Keyboard.AddOrReplace(
-                HotPhraseKeySequence
-                    .Named("Write some text and wildcards")
-                    .WhenKeysPressed(Keys.CapsLock, Keys.CapsLock, Keys.N)
-                    .FollowedByWildcards(WildcardMatchType.Digits, 1)
-                    .ThenCall(OnWriteTextWithWildcards)
+                KeySequence
+                    .Factory()                                             // <<< Name isn't necessary and defaults to a new Guid
+                    .WhenKeysPressed(PKey.CapsLock, PKey.CapsLock, PKey.N) // <<< Specify the entire pKey sequence at once
+                    .FollowedByWildcards(WildcardMatchType.Digits, 1)      // <<< User must press 0-9 one time and only one time to match
+                    .ThenCall(OnWriteTextWithWildcards)                    // <<< That one digit passed to this function
             );
+
+            // Here's a near equivalent in a single line call syntax except any two a-Z or 0-9 characters match after the first static 3
+            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, new List<PKey> {PKey.CapsLock, PKey.CapsLock, PKey.M });
         }
 
-        private void OnWriteTextFromTextBox(object? sender, HotPhraseEventArgs e)
+        private void OnWriteTextFromTextBox(object sender, PhraseEventArguments e)
         {
-            SendKeysKeyword.SendBackspaces(3);
+            Manager.KeySender.SendBackspaces(3);
 
-            var textPartsToSend = TextToSend.Text.MakeReadyForSendKeys();
+            var textPartsToSend = Manager.MakeReadyForSending(TextToSend.Text);
             if (textPartsToSend.Count <= 0) return;
 
-            foreach (var part in textPartsToSend)
-            {
-                SendKeys.SendWait(part);
-                Thread.Sleep(2);
-            }
+            Manager.KeySender.SendStrings(textPartsToSend, 2);
         }
 
-        public static void OnWriteTextWithWildcards(object? sender, HotPhraseEventArgs e)
+        public void OnWriteTextWithWildcards(object sender, PhraseEventArguments e)
         {
             if (e.State.MatchResult == null)
-                return;
+                return;  
 
+            // The wildcard character(s) entered by the user are stored in : e.State.MatchResult.Value
             var wildcards = e.State.MatchResult.Value;
             var wildcardsLength = wildcards?.Length ?? 0;
             if (wildcardsLength == 0) return;
             
-            SendKeysKeyword.SendBackspaces(2);
-            $"Your wildcard is {wildcards}".SendString();
-            switch (e.State.MatchResult.ValueAsInt())
+            // Send enough backspaces to cover the extra keys typed during the match
+            Manager.KeySender.SendBackspaces(1 + e.State.MatchResult.Value.Length);
+
+            // Send some strings based on the wildcard character(s)
+            Manager.KeySender.SendString($"Your wildcard is {wildcards}");
+            switch (e.State.MatchResult.Value.ToUpper())
             {
-                case 1:
-                    "\n\n\tThis is specific to wildcard 1\n\n".SendString();
+                case "1":
+                    Manager.KeySender.SendString("\n\n\tThis is specific to wildcard 1\n\n");
                     break;
-                case 5:
-                    "\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n".SendString();
+                case "5":
+                    Manager.KeySender.SendString("\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n");
+                    break;
+
+                default:
+                    Manager.KeySender.SendString($"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ");
                     break;
             }
         }
 
-        private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
+        private void OnTogglePhraseActivation(object sender, PhraseEventArguments e)
         {
             lock(SyncRoot)
             {
                 EnableGlobalHotkeysCheckBox.Checked = !EnableGlobalHotkeysCheckBox.Checked;
+                UpdateGlobalThingy(EnableGlobalHotkeysCheckBox.Checked);
             }
         }
 
-        public void OnIncrement(object sender, HotPhraseEventArgs e)
+        public void OnIncrement(object sender, PhraseEventArguments e)
         {
             Value++;
             e.Handled = true;
         }
 
-        public void OnDecrement(object sender, HotPhraseEventArgs e)
+        public void OnDecrement(object sender, PhraseEventArguments e)
         {
             Value--;
             e.Handled = true;
         }
 
+        public int _value;
         public int Value
         {
             get => _value;
@@ -158,7 +152,7 @@ namespace NHotPhrase.WindowsForms.Demo
             UpdateGlobalThingy(EnableGlobalHotkeysCheckBox.Checked);
         }
 
-        private void UpdateGlobalThingy(bool enableThingy)
+        private void UpdateGlobalThingy(bool enableThingy) // Safely setup/tear down hot phrases
         {
             if (UiChanging || !Monitor.TryEnter(SyncRoot)) return;
 

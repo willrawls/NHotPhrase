@@ -1,36 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.Phrase
 {
-    public class HotPhraseKeySequence
+    public class KeySequence
     {
         public string Name { get; set; }
 
-        public List<Keys> Sequence = new();
+        public List<PKey> Sequence = new();
         
         public WildcardMatchType WildcardMatchType { get; set; }
         public int WildcardCount { get; set; }
         
-        public PhraseActions Actions { get; set; } = new();
+        public PhraseActionList ActionList { get; set; } = new();
 
 
-        public HotPhraseKeySequence(string name, Keys[] keys, EventHandler<HotPhraseEventArgs> hotPhraseEventArgs)
+        public KeySequence(string name, List<PKey> keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
         {
             Name = name;
             Sequence.AddRange(keys);
             ThenCall(hotPhraseEventArgs);
         }
 
-        public HotPhraseKeySequence()
+        public KeySequence()
         {
         }
 
-        public static HotPhraseKeySequence Named(string name)
+        public static KeySequence Named(string name)
         {
             return new()
             {
@@ -38,19 +35,27 @@ namespace NHotPhrase.Phrase
             };
         }
 
-        public HotPhraseKeySequence WhenKeyRepeats(Keys repeatKey, int repeatCount)
+        public static KeySequence Factory()
         {
-            for (var i = 0; i < repeatCount; i++) Sequence.Add(repeatKey);
+            return new()
+            {
+                Name = Guid.NewGuid().ToString()
+            };
+        }
+
+        public KeySequence WhenKeyRepeats(PKey repeatPKey, int repeatCount)
+        {
+            for (var i = 0; i < repeatCount; i++) Sequence.Add(repeatPKey);
             return this;
         }
 
-        public HotPhraseKeySequence WhenKeyReleased(Keys key)
+        public KeySequence WhenKeyReleased(PKey pKey)
         {
-            Sequence.Add(key);
+            Sequence.Add(pKey);
             return this;
         }
 
-        public HotPhraseKeySequence WhenKeysReleased(IList<Keys> keys)
+        public KeySequence WhenKeysReleased(IList<PKey> keys)
         {
             Sequence.AddRange(keys);
             return this;
@@ -59,7 +64,7 @@ namespace NHotPhrase.Phrase
         public bool Run(MatchResult matchResult)
         {
             var state = new PhraseActionRunState(this, matchResult);
-            foreach (var action in Actions)
+            foreach (var action in ActionList)
             {
                 if (!action.RunNow(state))
                     return false;
@@ -67,7 +72,7 @@ namespace NHotPhrase.Phrase
             return true;
         }
 
-        public bool IsAMatch(List<Keys> keyList, out MatchResult matchResult)
+        public bool IsAMatch(List<PKey> keyList, out MatchResult matchResult)
         {
             matchResult = null;
 
@@ -81,7 +86,7 @@ namespace NHotPhrase.Phrase
 
             for (var i = 0; i < Sequence.Count; i++)
             {
-                if (!SendKeysKeyword.IsAMatch(Sequence[i], possibleMatchRange[i]))
+                if (!Sequence[i].IsAMatch(possibleMatchRange[i]))
                     return false;
             }
 
@@ -150,34 +155,34 @@ namespace NHotPhrase.Phrase
             return true;
         }
 
-        public HotPhraseKeySequence ThenCall(EventHandler<HotPhraseEventArgs> handler)
+        public KeySequence ThenCall(EventHandler<PhraseEventArguments> handler)
         {
             var sequence = new PhraseAction(this, handler);
-            Actions.Add(sequence);
+            ActionList.Add(sequence);
             return this;
         }
 
-        public HotPhraseKeySequence WhenKeyPressed(Keys key)
+        public KeySequence WhenKeyPressed(PKey pKey)
         {
             Sequence.Clear();
-            Sequence.Add(key);
+            Sequence.Add(pKey);
             return this;
         }
 
-        public HotPhraseKeySequence WhenKeysPressed(params Keys[] keys)
+        public KeySequence WhenKeysPressed(params PKey[] keys)
         {
             Sequence.Clear();
             Sequence.AddRange(keys);
             return this;
         }
 
-        public HotPhraseKeySequence ThenKeyPressed(Keys key)
+        public KeySequence ThenKeyPressed(PKey pKey)
         {
-            Sequence.Add(key);
+            Sequence.Add(pKey);
             return this;
         }
 
-        public HotPhraseKeySequence FollowedByWildcards(WildcardMatchType wildcardMatchType, int wildcardCount)
+        public KeySequence FollowedByWildcards(WildcardMatchType wildcardMatchType, int wildcardCount)
         {
             WildcardMatchType = wildcardMatchType;
             WildcardCount = wildcardCount;

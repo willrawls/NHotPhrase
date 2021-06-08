@@ -4,6 +4,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/willrawls/NHotPhrase</PackageProjectUrl>
     <PackageTags>global;hotkey;windows;keyboard;hotphrase</PackageTags>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Label="Package properties">
@@ -15,12 +16,6 @@
 
   <ItemGroup>
     <Compile Remove="HotPhraseManagerBase.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms">
-      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\System.Windows.Forms.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace NHotPhrase.Keyboard
 {
-    public class KeyHistory : List<Keys>
+    public class KeyHistory : List<PKey>
     {
-        // public List<Keys> History { get; set; } = new();
         public DateTime LastPressAt { get; set; } = DateTime.MinValue;
         public int MaxHistoryLength { get; set; } = 8;
         public int ClearAfterThisManySeconds { get; set; } = 5;
+
+        public static readonly object SyncRoot = new();
 
         public KeyHistory()
         {
         }
 
-        public KeyHistory(int maxHistoryLength, int clearAfterThisManySeconds, DateTime lastPressAt, List<Keys> history)
+        public KeyHistory(int maxHistoryLength, int clearAfterThisManySeconds, DateTime lastPressAt, List<PKey> history)
         {
             MaxHistoryLength = maxHistoryLength;
             ClearAfterThisManySeconds = clearAfterThisManySeconds;
@@ -23,11 +23,11 @@ namespace NHotPhrase.Keyboard
             AddRange(history);
         }
 
-        public new void Add(Keys key)
+        public new void Add(PKey pKey)
         {
-            AddKeyPress(key);
+            AddKeyPress(pKey);
         }
-        public KeyHistory AddKeyPress(Keys key)
+        public KeyHistory AddKeyPress(PKey pKey)
         {
             // If too much time has gone by, clear the queue
             if (Count > 0 && DateTime.Now.Subtract(LastPressAt).Seconds > ClearAfterThisManySeconds)
@@ -42,16 +42,15 @@ namespace NHotPhrase.Keyboard
             }
 
             LastPressAt = DateTime.Now;
-            base.Add(key);
+            base.Add(pKey);
             return this;
         }
 
-        public static object SyncRoot = new();
-        public List<Keys> KeyList()
+        public List<PKey> KeyList()
         {
             lock (SyncRoot)
             {
-                return new List<Keys>(this);
+                return new List<PKey>(this);
             }
         }
     }
