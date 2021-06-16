@@ -40,7 +40,7 @@ namespace NHotPhrase.WindowsForms.Tests
             var expected = "abcde{ADD}fgyzyzyzyzyzyzyzyzyzyz@hijk.lmn";
 
             var parent = new HotPhraseManagerForWinForms();
-            var actual = parent.MakeReadyForSending(data, 8);
+            var actual = parent.MakeReadyForSending(data, 8, false);
             Assert.IsNotNull(actual);
             Assert.AreEqual(6, actual.Count);
             

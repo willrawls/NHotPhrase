@@ -9,7 +9,7 @@ namespace NHotPhrase.WindowsForms.Demo
     public partial class DemoForm : Form
     {
 
-        public HotPhraseManagerForWinForms Manager { get; set; }
+        public ISendKeys Manager { get; set; }
         public static readonly object SyncRoot = new();
         public static bool UiChanging { get; set; }
 
@@ -27,7 +27,7 @@ namespace NHotPhrase.WindowsForms.Demo
             Manager = new HotPhraseManagerForWinForms();
 
             Manager.Keyboard.AddOrReplace(
-                KeySequence 
+                KeySequence
                     .Named("Toggle hot phrase activation")
                     .WhenKeyRepeats(PKey.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
@@ -43,7 +43,7 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Use the NHotkey like syntax if you like
-            Manager.Keyboard.AddOrReplace("Decrement", new List<PKey> {PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back}, OnDecrement);
+            Manager.Keyboard.AddOrReplace("Decrement", new List<PKey> { PKey.CapsLock, PKey.CapsLock, PKey.D, PKey.Back }, OnDecrement);
 
             // Or spell it out
             Manager.Keyboard.AddOrReplace(
@@ -66,52 +66,52 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Here's a near equivalent in a single line call syntax except any two a-Z or 0-9 characters match after the first static 3
-            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, new List<PKey> {PKey.CapsLock, PKey.CapsLock, PKey.M });
+            Manager.Keyboard.AddOrReplace(OnWriteTextWithWildcards, 2, WildcardMatchType.AlphaNumeric, new List<PKey> { PKey.CapsLock, PKey.CapsLock, PKey.M });
         }
 
         private void OnWriteTextFromTextBox(object sender, PhraseEventArguments e)
         {
             Manager.SendBackspaces(3);
 
-            var textPartsToSend = Manager.MakeReadyForSending(TextToSend.Text);
+            var textPartsToSend = Manager.MakeReadyForSending(TextToSend.Text, 8, false);
             if (textPartsToSend.Count <= 0) return;
 
-            Manager.SendStrings(textPartsToSend, 2);
+            Manager.SendStrings(textPartsToSend);
         }
 
         public void OnWriteTextWithWildcards(object sender, PhraseEventArguments e)
         {
             if (e.State.MatchResult == null)
-                return;  
+                return;
 
             // The wildcard character(s) entered by the user are stored in : e.State.MatchResult.Value
             var wildcards = e.State.MatchResult.Value;
             var wildcardsLength = wildcards?.Length ?? 0;
             if (wildcardsLength == 0) return;
-            
+
             // Send enough backspaces to cover the extra keys typed during the match
             Manager.SendBackspaces(1 + e.State.MatchResult.Value.Length);
 
             // Send some strings based on the wildcard character(s)
-            Manager.SendString($"Your wildcard is {wildcards}");
+            Manager.SendString($"Your wildcard is {wildcards}", 2, false);
             switch (e.State.MatchResult.Value.ToUpper())
             {
                 case "1":
-                    Manager.SendString("\n\n\tThis is specific to wildcard 1\n\n");
+                    Manager.SendString("\n\n\tThis is specific to wildcard 1\n\n", 2, false);
                     break;
                 case "5":
-                    Manager.SendString("\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n");
+                    Manager.SendString("\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n", 2, false);
                     break;
 
                 default:
-                    Manager.SendString($"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ");
+                    Manager.SendString($"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ", 2, false);
                     break;
             }
         }
 
         private void OnTogglePhraseActivation(object sender, PhraseEventArguments e)
         {
-            lock(SyncRoot)
+            lock (SyncRoot)
             {
                 EnableGlobalHotkeysCheckBox.Checked = !EnableGlobalHotkeysCheckBox.Checked;
                 UpdateGlobalThingy(EnableGlobalHotkeysCheckBox.Checked);

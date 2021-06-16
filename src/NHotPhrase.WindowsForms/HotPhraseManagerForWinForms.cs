@@ -8,10 +8,9 @@ using NHotPhrase.Phrase;
 
 namespace NHotPhrase.WindowsForms
 {
-    public class HotPhraseManagerForWinForms : HotPhraseManager, ISendKeys
+    public class HotPhraseManagerForWinForms : HotPhraseManager
     {
-
-        public bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keysToSend)
+        public override bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keysToSend)
         {
             if (keysToSend is not {Count: > 0}) 
                 return true;
@@ -20,22 +19,30 @@ namespace NHotPhrase.WindowsForms
             return true;
         }
 
-        public bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep)
+        public override bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep)
         {
-            SendKeys.SendWait(stringToSend);
+            try
+            {
+                SendKeys.SendWait(stringToSend);
+            }
+            catch (InvalidOperationException)
+            {
+                Thread.Sleep(250);
+                SendKeys.SendWait(stringToSend);
+            }
             if(millisecondThreadSleep > 0)
                 Thread.Sleep(millisecondThreadSleep);
             return true;
         }
 
-        public bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep)
+        public override bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep)
         {
             foreach (var part in stringsToSend) 
                 SendKeysAndWait(part, 2);
             return true;
         }
 
-        public bool SendKeysAndWait(List<PKey> keysToSend, int millisecondThreadSleep)
+        public override bool SendKeysAndWait(List<PKey> keysToSend, int millisecondThreadSleep)
         {
             if (keysToSend is not {Count: > 0}) 
                 return true;
@@ -52,15 +59,26 @@ namespace NHotPhrase.WindowsForms
                 : pKey.ToString();
         }
 
-        public List<string> MakeReadyForSending(string target, int splitLength = 8)
+        public override List<string> MakeReadyForSending(string target, int splitLength, bool sendAsIs)
         {
             if (string.IsNullOrEmpty(target))
                 return new List<string>();
 
-            foreach (var keyword in SendKeyHelper.Entries.Where(k => !string.IsNullOrEmpty(k.ReplaceWith)))
-                target = target.Replace(keyword.Name, "⌂" + keyword.ReplaceWith + "⌂");
+            if (splitLength < 4)
+                splitLength = 4;
 
-            var list = target.Split('⌂', StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<string> list;
+            if (sendAsIs)
+            {
+                list = new List<string>() {target};
+            }
+            else
+            {
+                foreach (var keyword in SendKeyHelper.Entries.Where(k => !string.IsNullOrEmpty(k.ReplaceWith)))
+                    target = target.Replace(keyword.Name, "⌂" + keyword.ReplaceWith + "⌂");
+                list = target.Split('⌂', StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
+
             while (list.Any(p => p.Length > splitLength))
                 for (var i = 0; i < list.Count; i++)
                 {
@@ -74,7 +92,7 @@ namespace NHotPhrase.WindowsForms
             return list;
         }
 
-        public void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
+        public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys)
         {
             var keys = new List<PKey>();
             for (var i = 0; i < backspaceCount; i++)
@@ -82,13 +100,13 @@ namespace NHotPhrase.WindowsForms
             SendKeysAndWait(keys, millisecondsBetweenKeys);
         }
 
-        public void SendString(string textToSend, int millisecondsBetweenKeys = 2)
+        public override void SendString(string textToSend, int millisecondsBetweenKeys, bool sendAsIs)
         {
-            var textParts = MakeReadyForSending(textToSend);
+            var textParts = MakeReadyForSending(textToSend, SplitLength, sendAsIs);
             SendStrings(textParts, millisecondsBetweenKeys);
         }
 
-        public void SendStrings(IList<string> textPartsToSend, int millisecondsBetweenKeys = 2)
+        public override void SendStrings(IList<string> textPartsToSend, int millisecondsBetweenKeys)
         {
             if (textPartsToSend.Count <= 0) return;
 

@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.Phrase
 {
-    public abstract class HotPhraseManager : IDisposable
+    public abstract class HotPhraseManager : IDisposable, ISendKeys
     {
         public Guid ID { get; } = Guid.NewGuid();
+        public int SplitLength { get; set; } = 8;
 
-        // public SendKeyHelper KeySender { get; set; }
         public KeyboardManager Keyboard { get; set; }
-
         public KeyHistory History { get; set; } = new();
+
         public static object SyncRoot { get; } = new();
 
         public HotPhraseManager()
@@ -49,10 +50,20 @@ namespace NHotPhrase.Phrase
             }
         }
 
+        public abstract bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keys);
+        public abstract bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep);
+        public abstract bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep);
+        public abstract bool SendKeysAndWait(List<PKey> keys, int millisecondThreadSleep);
+        public abstract List<string> MakeReadyForSending(string target, int splitLength, bool sendAsIs);
+        public abstract void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys);
+        public abstract void SendString(string textToSend, int millisecondsBetweenKeys, bool sendAsIs);
+        public abstract void SendStrings(IList<string> textPartsToSend, int millisecondsBetweenKeys);
+
         public void Dispose()
         {
             Keyboard?.Dispose();
             GC.SuppressFinalize(this);
         }
+
     }
 }
