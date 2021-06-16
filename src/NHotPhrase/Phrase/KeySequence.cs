@@ -182,11 +182,13 @@ namespace NHotPhrase.Phrase
             return this;
         }
 
+        /*
         public KeySequence FollowedByWildcards(WildcardMatchType wildcardMatchType, int wildcardCount)
         {
             WildcardMatchType = wildcardMatchType;
             WildcardCount = wildcardCount;
             return this;
         }
+    */
     }
 }
