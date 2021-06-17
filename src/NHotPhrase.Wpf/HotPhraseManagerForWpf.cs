@@ -22,7 +22,7 @@ namespace NHotPhrase.Wpf
             return convertedKeys;
         }
 
-        public bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keysToSend)
+        public override bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keysToSend)
         {
             if (keysToSend is not {Count: > 0})
                 return true;
@@ -36,7 +36,7 @@ namespace NHotPhrase.Wpf
             return true;
         }
 
-        public bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep = 2)
+        public override bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep = 2)
         {
             InputSimulator.Keyboard.TextEntry(stringToSend);
             if (millisecondThreadSleep > 0)
@@ -44,14 +44,14 @@ namespace NHotPhrase.Wpf
             return true;
         }
 
-        public bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep = 2)
+        public override bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep = 2)
         {
             foreach (var part in stringsToSend)
                 SendKeysAndWait(part, millisecondThreadSleep);
             return true;
         }
 
-        public bool SendKeysAndWait(List<PKey> keysToSend, int millisecondThreadSleep)
+        public override bool SendKeysAndWait(List<PKey> keysToSend, int millisecondThreadSleep)
         {
             if (keysToSend is not {Count: > 0})
                 return true;
@@ -59,13 +59,13 @@ namespace NHotPhrase.Wpf
             foreach (var key in inputSimulatorKeys)
             {
                 InputSimulator.Keyboard.KeyPress(key);
-                Thread.Sleep(MillisecondsBetweenKeyPress);
+                Thread.Sleep(millisecondThreadSleep);
             }
 
             return true;
         }
 
-        public List<string> MakeReadyForSending(string target, int splitLength = 8)
+        public override List<string> MakeReadyForSending(string target, int splitLength, bool sendAsIs)
         {
             if (string.IsNullOrEmpty(target))
                 return new List<string>();
@@ -83,9 +83,8 @@ namespace NHotPhrase.Wpf
 
             return list;
         }
-
-
-        public void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
+        
+        public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
         {
             var keys = new List<PKey>();
             for (var i = 0; i < backspaceCount; i++)
@@ -93,13 +92,13 @@ namespace NHotPhrase.Wpf
             SendKeysAndWait(keys, millisecondsBetweenKeys);
         }
 
-        public void SendString(string textToSend, int millisecondsBetweenKeys = 2)
+        public override void SendString(string textToSend, int millisecondsBetweenKeys, bool sendAsIs)
         {
-            var textParts = MakeReadyForSending(textToSend);
+            var textParts = MakeReadyForSending(textToSend, SplitLength, sendAsIs);
             SendStrings(textParts, millisecondsBetweenKeys);
         }
 
-        public void SendStrings(IList<string> textPartsToSend, int millisecondsBetweenKeys = 2)
+        public override void SendStrings(IList<string> textPartsToSend, int millisecondsBetweenKeys)
         {
             if (textPartsToSend.Count <= 0) return;
 

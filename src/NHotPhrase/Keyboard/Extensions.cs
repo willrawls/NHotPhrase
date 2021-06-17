@@ -304,11 +304,11 @@ namespace NHotPhrase.Keyboard
             simplifiablePKey = simplifiablePKey.FilterDuplicateEnumEntryNames();
 
             if (!exactingPKey.ShouldBeSimplified())
-                return simplifiablePKey == exactingPKey; // Must be exactly that pKey
+                return (int) simplifiablePKey == (int) exactingPKey; // Must be exactly that pKey
 
             var exactingSimplified = exactingPKey.Simplify();
             var simplifiableSimplified = simplifiablePKey.Simplify();
-            return (exactingSimplified & simplifiableSimplified) == exactingSimplified;
+            return ((int) exactingSimplified & (int) simplifiableSimplified) == (int) exactingSimplified;
         }
 
         public static PKey FilterDuplicateEnumEntryNames(this PKey pKey)
@@ -318,6 +318,7 @@ namespace NHotPhrase.Keyboard
                 // Some PKey entries have the same value but different enum entry names, which is sometimes troublesome
                 PKey.Return => PKey.Enter,
                 PKey.CapsLock => PKey.Capital,
+                PKey.LButton | PKey.OemClear => PKey.Capital,
                 _ => pKey
             };
         }
@@ -346,7 +347,7 @@ namespace NHotPhrase.Keyboard
                 case PKey.D9: // == NumPad9
                 case PKey.OemMinus: // == Separator
                 case PKey.Oemplus: // == Add
-                case PKey.Capital:
+                //case PKey.Capital:
                     return true;
             }
 

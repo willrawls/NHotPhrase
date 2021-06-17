@@ -9,10 +9,10 @@
 
   <PropertyGroup Label="Package properties">
     <Description>A managed library to handle globally available "hot phrases" in Windows. NOTE: this package doesn't contain a concrete HotPhraseManager implementation; you should add the NHotPhrase.WindowsForms or NHotPhrase.Wpf package to get the top level management for WindForm or Wpf respectively.</Description>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>William Rawls</Authors>
     <Company>vorzan.com</Company>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

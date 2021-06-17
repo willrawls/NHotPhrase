@@ -13,7 +13,7 @@ namespace NHotPhrase.Wpf.Demo
     /// </summary>
     public partial class MainWindow : INotifyPropertyChanged
     {
-        public HotPhraseManagerForWpf Manager { get; set; }
+        public ISendKeys Manager { get; set; }
         public static readonly object SyncRoot = new();
 #pragma warning disable CA2211 // Non-constant fields should not be visible
         public static bool UiChanging;
@@ -78,9 +78,9 @@ namespace NHotPhrase.Wpf.Demo
         
         private void OnWriteTextFromTextBox(object sender, PhraseEventArguments e)
         {
-            Manager.SendBackspaces(3);
+            Manager.SendBackspaces(3, 2);
             
-            var textPartsToSend = Manager.MakeReadyForSending(TextToSend.Text);
+            var textPartsToSend = Manager.MakeReadyForSending(TextToSend.Text, Manager.SplitLength, false);
             if (textPartsToSend.Count <= 0) return;
 
             Manager.SendKeysAndWait(textPartsToSend, 2);
@@ -100,14 +100,14 @@ namespace NHotPhrase.Wpf.Demo
             Manager.SendBackspaces(1 + e.State.MatchResult.Value.Length);
 
             // Send some strings based on the wildcard character(s)
-            Manager.SendString($"Your wildcard is {wildcards}");
+            Manager.SendString($"Your wildcard is {wildcards}", 2, false);
             switch (e.State.MatchResult.Value.ToUpper())
             {
                 case "1":
-                    Manager.SendString("\n\n\tThis is specific to wildcard 1\n\n");
+                    Manager.SendString("\n\n\tThis is specific to wildcard 1\n\n", 2, false);
                     break;
                 case "5":
-                    Manager.SendString("\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n");
+                    Manager.SendString("\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n", 2, false);
                     break;
 
                 case "NE":
@@ -118,7 +118,7 @@ namespace NHotPhrase.Wpf.Demo
                     Test();
                     break;
                 default:
-                    Manager.SendString($"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ");
+                    Manager.SendString($"\n\n\t### Other\n- This is a double character wildcard\n- You typed: {e.State.MatchResult.Value}\n- ", 2, false);
                     break;
             }
         }
