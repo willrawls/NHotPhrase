@@ -40,7 +40,6 @@ namespace NHotPhrase.Phrase
 
                 if (!string.IsNullOrEmpty(matchResult?.Value))
                     Debug.WriteLine($"  Wilds {matchResult.Value}");
-
                 History.Clear();
                 trigger.Run(matchResult);
             }

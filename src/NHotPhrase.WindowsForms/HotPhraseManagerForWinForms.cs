@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -21,14 +22,25 @@ namespace NHotPhrase.WindowsForms
 
         public override bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep)
         {
-            try
+            var sent = false;
+            for (var i = 0; i < 5 && !sent; i++)
             {
-                SendKeys.SendWait(stringToSend);
-            }
-            catch (InvalidOperationException)
-            {
-                Thread.Sleep(250);
-                SendKeys.SendWait(stringToSend);
+                try
+                {
+                    stringToSend = stringToSend
+                            .Replace("{", "~{~")
+                            .Replace("}", "~}~")
+                            .Replace("~{~", "{{}")
+                            .Replace("~}~", "{}}")
+                        ;
+                    SendKeys.SendWait(stringToSend);
+                    sent = true;
+                }
+                catch (InvalidOperationException)
+                {
+                    Debug.WriteLine($"SendKeysAndWait: InvalidOperation: i={i}");
+                    Thread.Sleep(100 + 100*(i+1));
+                }
             }
             if(millisecondThreadSleep > 0)
                 Thread.Sleep(millisecondThreadSleep);
@@ -92,7 +104,7 @@ namespace NHotPhrase.WindowsForms
             return list;
         }
 
-        public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys)
+        public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
         {
             var keys = new List<PKey>();
             for (var i = 0; i < backspaceCount; i++)
