@@ -6,6 +6,7 @@ namespace NHotPhrase.Keyboard
 {
     public static class SendKeyHelper
     {
+
         public static SendPKeyEntry[] Entries { get; set; } =
         {
             new("ENTER", 13),
@@ -69,5 +70,34 @@ namespace NHotPhrase.Keyboard
             new("(", 40, "{(}"),
             new(")", 41, "{)}")
         };
+
+        public static string ToSendKeysFormat(this string stringToSend)
+        {
+            foreach (var entry in SendKeyHelper.Entries.Where(e =>
+                    !string.IsNullOrEmpty(e.ReplaceWith)
+                    && (e.ReplaceWith.Contains("{") || e.ReplaceWith.Contains("}"))
+                ))
+            {
+                stringToSend = stringToSend.Replace(entry.Name, entry.ReplaceWith);
+            }
+
+            stringToSend = stringToSend
+                    .Replace("{", "~{~")
+                    .Replace("}", "~}~")
+                    .Replace("~{~", "{{}")
+                    .Replace("~}~", "{}}")
+                ;
+            return stringToSend;
+        }
+
+        public static string ToSendKeysText(this PKey pKey)
+        {
+            var keyword = SendKeyHelper.Entries.FirstOrDefault(k => k.Number == (int) pKey);
+            return keyword != null 
+                ? keyword.SendKeysText()
+                : pKey.ToString();
+        }
+
+
     }
 }
