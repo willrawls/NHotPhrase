@@ -300,6 +300,9 @@ namespace NHotPhrase.Keyboard
 
         public static bool IsAMatch(this PKey exactingPKey, PKey simplifiablePKey)
         {
+            if ((int) exactingPKey == (int) simplifiablePKey)
+                return true;
+
             exactingPKey = exactingPKey.FilterDuplicateEnumEntryNames();
             simplifiablePKey = simplifiablePKey.FilterDuplicateEnumEntryNames();
 
@@ -308,7 +311,8 @@ namespace NHotPhrase.Keyboard
 
             var exactingSimplified = exactingPKey.Simplify();
             var simplifiableSimplified = simplifiablePKey.Simplify();
-            return ((int) exactingSimplified & (int) simplifiableSimplified) == (int) exactingSimplified;
+            return (int) exactingSimplified == (int) simplifiableSimplified;
+            // return ((int) exactingSimplified & (int) simplifiableSimplified) == (int) exactingSimplified;
         }
 
         public static PKey FilterDuplicateEnumEntryNames(this PKey pKey)
