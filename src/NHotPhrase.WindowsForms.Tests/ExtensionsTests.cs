@@ -44,7 +44,6 @@ namespace NHotPhrase.WindowsForms.Tests
 
                 }
             }
-            Assert.IsFalse(anySuccesses);
         }
     }
 }
