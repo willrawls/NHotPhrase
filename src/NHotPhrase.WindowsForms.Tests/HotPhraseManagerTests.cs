@@ -85,7 +85,7 @@ namespace NHotPhrase.WindowsForms.Tests
         }
 
         [TestMethod]
-        public void ControlControl2()
+        public void ControlControl1_2_or_3_ButOnly2Matches()
         {
             static void HotPhraseEventArgs(object _, PhraseEventArguments e) => e.Handled = true;
             var keysTyped = new List<PKey> {PKey.Shift, PKey.ControlKey, PKey.ControlKey, PKey.D3};
