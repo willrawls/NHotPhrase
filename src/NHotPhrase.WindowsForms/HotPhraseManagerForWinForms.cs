@@ -94,6 +94,8 @@ namespace NHotPhrase.WindowsForms
 
         public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
         {
+            if (backspaceCount < 1) return;
+
             var keys = new List<PKey>();
             for (var i = 0; i < backspaceCount; i++)
                 keys.Add(PKey.Back);

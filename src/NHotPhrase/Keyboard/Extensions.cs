@@ -300,6 +300,9 @@ namespace NHotPhrase.Keyboard
 
         public static bool IsAMatch(this PKey exactingPKey, PKey simplifiablePKey)
         {
+            if ((int) exactingPKey == (int) simplifiablePKey)
+                return true;
+
             exactingPKey = exactingPKey.FilterDuplicateEnumEntryNames();
             simplifiablePKey = simplifiablePKey.FilterDuplicateEnumEntryNames();
 
@@ -308,7 +311,8 @@ namespace NHotPhrase.Keyboard
 
             var exactingSimplified = exactingPKey.Simplify();
             var simplifiableSimplified = simplifiablePKey.Simplify();
-            return ((int) exactingSimplified & (int) simplifiableSimplified) == (int) exactingSimplified;
+            return (int) exactingSimplified == (int) simplifiableSimplified;
+            // return ((int) exactingSimplified & (int) simplifiableSimplified) == (int) exactingSimplified;
         }
 
         public static PKey FilterDuplicateEnumEntryNames(this PKey pKey)
@@ -437,8 +441,50 @@ namespace NHotPhrase.Keyboard
                 case PKey.Separator:
                     return PKey.OemMinus;
             }
-
             return pKey;
+        }
+
+        public static bool ShouldBeBackspaced(this PKey pKey)
+        {
+            switch (pKey)
+            {
+                case PKey.Enter:  // or .Return (same code)
+                case PKey.Shift:
+                case PKey.ShiftKey:
+                case PKey.LShiftKey:
+                case PKey.RShiftKey:
+                case PKey.Control:
+                case PKey.ControlKey:
+                case PKey.RControlKey:
+                case PKey.LControlKey:
+                case PKey.Alt:
+                case PKey.LMenu:
+                case PKey.RMenu:
+                case PKey.LWin:
+                case PKey.RWin:
+                case PKey.CapsLock:
+                case PKey.Escape:
+                case PKey.Print:
+                case PKey.PrintScreen:
+                case PKey.Pause:
+                case PKey.Insert:
+                case PKey.Delete:
+                case PKey.Home:
+                case PKey.End:
+                case PKey.PageDown:
+                case PKey.PageUp:
+                case PKey.Up:
+                case PKey.Down:
+                case PKey.Left:
+                case PKey.Right:
+                case PKey.Back:
+                    return false;
+            }
+
+            if (pKey is >= PKey.F1 and PKey.F24)
+                return false;
+
+            return true;
         }
     }
 }

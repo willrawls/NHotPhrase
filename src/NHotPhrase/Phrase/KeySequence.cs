@@ -188,5 +188,21 @@ namespace NHotPhrase.Phrase
             WildcardCount = wildcardCount;
             return this;
         }
+
+        public int BackspacesToSend(int minimum = 0, int maximum = 50)
+        {
+            int backspaceCount = 0;
+            foreach (PKey key in Sequence)
+            {
+                if (key.ShouldBeBackspaced())
+                    backspaceCount++;
+            }
+
+            if (backspaceCount < minimum)
+                backspaceCount = minimum;
+            if (backspaceCount > maximum)
+                backspaceCount = maximum;
+            return backspaceCount;
+        }
     }
 }
