@@ -7,6 +7,9 @@
   </PropertyGroup>
   <PropertyGroup Label="Package properties">
     <Description>A managed library to handle global hotkeys in WPF applications. This package contains the concrete HotkeyManager implementation for WPF.</Description>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
+    <Version>1.0.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="InputSimulatorCore" Version="1.0.5" />

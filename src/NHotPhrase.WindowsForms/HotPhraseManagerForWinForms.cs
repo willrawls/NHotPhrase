@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using MetX.Standard.Library;
 using NHotPhrase.Keyboard;
 using NHotPhrase.Phrase;
 
@@ -16,7 +17,7 @@ namespace NHotPhrase.WindowsForms
             if (keysToSend is not {Count: > 0}) 
                 return true;
             foreach (var key in keysToSend)
-                SendKeys.SendWait(ToSendKeysText(key));
+                SendKeys.SendWait(key.ToSendKeysText());
             return true;
         }
 
@@ -27,14 +28,7 @@ namespace NHotPhrase.WindowsForms
             {
                 try
                 {
-                    /*
-                    stringToSend = stringToSend
-                            .Replace("{", "~{~")
-                            .Replace("}", "~}~")
-                            .Replace("~{~", "{{}")
-                            .Replace("~}~", "{}}")
-                        ;
-                    */
+                    stringToSend = stringToSend.ToSendKeysFormat();
                     SendKeys.SendWait(stringToSend);
                     sent = true;
                 }
@@ -61,16 +55,8 @@ namespace NHotPhrase.WindowsForms
             if (keysToSend is not {Count: > 0}) 
                 return true;
             foreach (var key in keysToSend)
-                SendKeys.SendWait(ToSendKeysText(key));
+                SendKeys.SendWait(key.ToSendKeysText());
             return true;
-        }
-
-        public static string ToSendKeysText(PKey pKey)
-        {
-            var keyword = SendKeyHelper.Entries.FirstOrDefault(k => k.Number == (int) pKey);
-            return keyword != null 
-                ? keyword.SendKeysText()
-                : pKey.ToString();
         }
 
         public override List<string> MakeReadyForSending(string target, int splitLength, bool sendAsIs)
