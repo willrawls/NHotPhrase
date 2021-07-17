@@ -39,7 +39,7 @@ namespace NHotPhrase.WindowsForms.Tests
                     if (!key.IsAMatch((PKey) j)) continue;
 
                     if (key.ShouldBeSimplified()) continue;
-                    Console.WriteLine($"{key} == {(PKey) j}");
+                    Assert.AreNotEqual(key, (PKey) j, $"{key} == {(PKey) j}");
                     anySuccesses = true;
 
                 }
