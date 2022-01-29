@@ -16,6 +16,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\xlg\MetX\MetX.Standard\MetX.Standard.csproj" />
-    <ProjectReference Include="..\NHotPhrase\NHotPhrase.csproj" />
   </ItemGroup>
 </Project>

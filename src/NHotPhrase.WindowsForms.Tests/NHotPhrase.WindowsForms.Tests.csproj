@@ -13,9 +13,4 @@
     <PackageReference Include="coverlet.collector" Version="1.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\NHotPhrase.WindowsForms\NHotPhrase.WindowsForms.csproj" />
-    <ProjectReference Include="..\NHotPhrase\NHotPhrase.csproj" />
-  </ItemGroup>
-
 </Project>

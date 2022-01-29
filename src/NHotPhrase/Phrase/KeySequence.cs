@@ -15,16 +15,21 @@ namespace NHotPhrase.Phrase
         
         public PhraseActionList ActionList { get; set; } = new();
 
+        public KeySequence()
+        {
+        }
+
+        public KeySequence(string keys)
+        {
+            Sequence = Extensions.ToPKeyList(keys);
+        }
+
 
         public KeySequence(string name, List<PKey> keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
         {
             Name = name;
             Sequence.AddRange(keys);
             ThenCall(hotPhraseEventArgs);
-        }
-
-        public KeySequence()
-        {
         }
 
         public static KeySequence Named(string name)
@@ -176,6 +181,13 @@ namespace NHotPhrase.Phrase
             return this;
         }
 
+        public KeySequence WhenKeysPressed(string keyText)
+        {
+            Sequence.Clear();
+            Sequence.AddRange(keys);
+            return this;
+        }
+
         public KeySequence ThenKeyPressed(PKey pKey)
         {
             Sequence.Add(pKey);
@@ -204,5 +216,7 @@ namespace NHotPhrase.Phrase
                 backspaceCount = maximum;
             return backspaceCount;
         }
+
+
     }
 }
