@@ -55,7 +55,10 @@ namespace NHotPhrase.WindowsForms
             if (keysToSend is not {Count: > 0}) 
                 return true;
             foreach (var key in keysToSend)
+            {
                 SendKeys.SendWait(key.ToSendKeysText());
+                Thread.Sleep(millisecondThreadSleep);
+            }
             return true;
         }
 
@@ -92,7 +95,7 @@ namespace NHotPhrase.WindowsForms
             return list;
         }
 
-        public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
+        public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 5)
         {
             if (backspaceCount < 1) return;
 
