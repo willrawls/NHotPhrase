@@ -95,7 +95,7 @@ namespace NHotPhrase.WindowsForms
             return list;
         }
 
-        public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 5)
+        public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 1)
         {
             if (backspaceCount < 1) return;
 

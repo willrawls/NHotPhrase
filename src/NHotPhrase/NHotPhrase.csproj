@@ -1,23 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>net5.0-windows</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/willrawls/NHotPhrase</PackageProjectUrl>
-    <PackageTags>global;hotkey;windows;keyboard;hotphrase;text;expansion;winforms;form;c#</PackageTags>
-    <Platforms>AnyCPU;x64</Platforms>
-    <DelaySign>false</DelaySign>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-windows</TargetFrameworks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageProjectUrl>https://github.com/willrawls/NHotPhrase</PackageProjectUrl>
+		<PackageTags>global;hotkey;windows;keyboard;hotphrase;text;expansion;winforms;form;c#</PackageTags>
+		<Platforms>AnyCPU;x64</Platforms>
+		<DelaySign>false</DelaySign>
+		<AssemblyVersion>6.0.0.0</AssemblyVersion>
+		<FileVersion>6.0.0.0</FileVersion>
+		<Version>6.0.0</Version>
+	</PropertyGroup>
 
-  <PropertyGroup Label="Package properties">
-    <Description>A managed library to handle globally available "hot phrases" in Windows. NOTE: this package doesn't contain a concrete HotPhraseManager implementation; you should add the NHotPhrase.WindowsForms or NHotPhrase.Wpf package to get the top level management for WindForm or Wpf respectively.</Description>
-    <Version>1.0.2</Version>
-    <Authors>William Rawls</Authors>
-    <Company>vorzan.com</Company>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-  </PropertyGroup>
+	<PropertyGroup Label="Package properties">
+		<Description>A managed library to handle globally available "hot phrases" in Windows. NOTE: this package doesn't contain a concrete HotPhraseManager implementation; you should add the NHotPhrase.WindowsForms or NHotPhrase.Wpf package to get the top level management for WindForm or Wpf respectively.</Description>
+		<Version>6.0.0</Version>
+		<Authors>William Rawls</Authors>
+		<Company>vorzan.com</Company>
+		<AssemblyVersion>6.0.0.0</AssemblyVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="HotPhraseManagerBase.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="HotPhraseManagerBase.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\xlg\MetX\MetX.Standard.Library\MetX.Standard.Library.csproj" />
+	</ItemGroup>
 
 </Project>

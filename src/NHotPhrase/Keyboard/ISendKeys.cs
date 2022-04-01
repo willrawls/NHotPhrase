@@ -12,14 +12,14 @@ namespace NHotPhrase.Keyboard
         KeyHistory History { get; set; }
 
         bool SendKeysAndWait(PhraseActionRunState phraseActionRunState, List<PKey> keys);
-        bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep = 2);
-        bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep = 2);
-        bool SendKeysAndWait(List<PKey> keys, int millisecondThreadSleep = 2);
+        bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep = 1);
+        bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep = 1);
+        bool SendKeysAndWait(List<PKey> keys, int millisecondThreadSleep = 1);
 
         List<string> MakeReadyForSending(string target, int splitLength = 8, bool sendAsIs = false);
 
-        void SendString(string textToSend, int millisecondsBetweenKeys = 2, bool sendAsIs = false);
-        void SendStrings(IList<string> textPartsToSend, int millisecondsBetweenKeys = 2);
-        void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2);
+        void SendString(string textToSend, int millisecondsBetweenKeys = 1, bool sendAsIs = false);
+        void SendStrings(IList<string> textPartsToSend, int millisecondsBetweenKeys = 1);
+        void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 1);
     }
 }

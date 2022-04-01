@@ -19,12 +19,6 @@ namespace NHotPhrase.Phrase
         {
         }
 
-        public KeySequence(string keys)
-        {
-            Sequence = Extensions.ToPKeyList(keys);
-        }
-
-
         public KeySequence(string name, List<PKey> keys, EventHandler<PhraseEventArguments> hotPhraseEventArgs)
         {
             Name = name;
@@ -184,7 +178,7 @@ namespace NHotPhrase.Phrase
         public KeySequence WhenKeysPressed(string keyText)
         {
             Sequence.Clear();
-            Sequence.AddRange(keys);
+            Sequence.AddRange(keyText.ToPKeyList(null, out var wildcardMatchType, out var wildcardCount));
             return this;
         }
 

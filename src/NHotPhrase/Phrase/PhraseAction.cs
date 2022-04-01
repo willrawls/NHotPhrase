@@ -9,7 +9,7 @@ namespace NHotPhrase.Phrase
         public KeySequence Parent { get; set; }
         public EventHandler<PhraseEventArguments> Handler { get; set; }
         public List<PKey> KeysToSend { get; set; }
-        public int MillisecondPauseBetweenKeys { get; set; } = 2;
+        public int MillisecondPauseBetweenKeys { get; set; } = 1;
 
         public static ISendKeys SendKeysProxy { get; set; }
 

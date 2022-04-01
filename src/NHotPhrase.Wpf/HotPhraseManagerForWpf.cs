@@ -36,7 +36,7 @@ namespace NHotPhrase.Wpf
             return true;
         }
 
-        public override bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep = 2)
+        public override bool SendKeysAndWait(string stringToSend, int millisecondThreadSleep = 1)
         {
             InputSimulator.Keyboard.TextEntry(stringToSend);
             if (millisecondThreadSleep > 0)
@@ -44,7 +44,7 @@ namespace NHotPhrase.Wpf
             return true;
         }
 
-        public override bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep = 2)
+        public override bool SendKeysAndWait(List<string> stringsToSend, int millisecondThreadSleep = 1)
         {
             foreach (var part in stringsToSend)
                 SendKeysAndWait(part, millisecondThreadSleep);
@@ -84,7 +84,7 @@ namespace NHotPhrase.Wpf
             return list;
         }
         
-        public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 2)
+        public override void SendBackspaces(int backspaceCount, int millisecondsBetweenKeys = 1)
         {
             var keys = new List<PKey>();
             for (var i = 0; i < backspaceCount; i++)
