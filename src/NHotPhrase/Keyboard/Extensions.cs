@@ -1,10 +1,9 @@
-﻿using System;
+﻿using MetX.Standard.Strings;
+using MetX.Standard.Strings.Tokens;
+using NHotPhrase.Phrase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MetX.Standard.Library.Extensions;
-using MetX.Standard.Strings;
-using MetX.Standard.Strings.Extensions;
-using NHotPhrase.Phrase;
 
 namespace NHotPhrase.Keyboard
 {
@@ -306,18 +305,18 @@ namespace NHotPhrase.Keyboard
 
         public static bool IsAMatch(this PKey exactingPKey, PKey simplifiablePKey)
         {
-            if ((int) exactingPKey == (int) simplifiablePKey)
+            if ((int)exactingPKey == (int)simplifiablePKey)
                 return true;
 
             exactingPKey = exactingPKey.FilterDuplicateEnumEntryNames();
             simplifiablePKey = simplifiablePKey.FilterDuplicateEnumEntryNames();
 
             if (!exactingPKey.ShouldBeSimplified())
-                return (int) simplifiablePKey == (int) exactingPKey; // Must be exactly that pKey
+                return (int)simplifiablePKey == (int)exactingPKey; // Must be exactly that pKey
 
             var exactingSimplified = exactingPKey.Simplify();
             var simplifiableSimplified = simplifiablePKey.Simplify();
-            return (int) exactingSimplified == (int) simplifiableSimplified;
+            return (int)exactingSimplified == (int)simplifiableSimplified;
             // return ((int) exactingSimplified & (int) simplifiableSimplified) == (int) exactingSimplified;
         }
 
@@ -357,7 +356,7 @@ namespace NHotPhrase.Keyboard
                 case PKey.D9: // == NumPad9
                 case PKey.OemMinus: // == Separator
                 case PKey.Oemplus: // == Add
-                //case PKey.Capital:
+                    //case PKey.Capital:
                     return true;
             }
 
@@ -541,7 +540,7 @@ namespace NHotPhrase.Keyboard
 
             if (singlePKeyText.IsEmpty()) return PKey.None;
 
-            if(singlePKeyText.Length == 1 && char.IsLower(singlePKeyText[0]))
+            if (singlePKeyText.Length == 1 && char.IsLower(singlePKeyText[0]))
                 singlePKeyText = singlePKeyText.ToUpper();
 
             if (singlePKeyText.All(x => x == '#'))
@@ -602,7 +601,7 @@ namespace NHotPhrase.Keyboard
                     if (pKeyObject == null) continue;
 
                     var pKey = (PKey)pKeyObject;
-                    if (pKey.ToString() == key) 
+                    if (pKey.ToString() == key)
                         additionalKeysFound?.Add(pKey);
                     else
                     {

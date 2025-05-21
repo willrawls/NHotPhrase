@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows</TargetFrameworks>
+		<TargetFrameworks>net8.0-windows</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageProjectUrl>https://github.com/willrawls/NHotPhrase</PackageProjectUrl>
 		<PackageTags>global;hotkey;windows;keyboard;hotphrase;text;expansion;winforms;form;c#</PackageTags>
 		<Platforms>AnyCPU;x64</Platforms>
 		<DelaySign>false</DelaySign>
-		<AssemblyVersion>6.0.0.0</AssemblyVersion>
-		<FileVersion>6.0.0.0</FileVersion>
-		<Version>6.0.0</Version>
+		<AssemblyVersion>2025.5.21.0</AssemblyVersion>
+		<FileVersion>2025.5.21.0</FileVersion>
+		<Version>2025.5.21</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Package properties">
 		<Description>A managed library to handle globally available "hot phrases" in Windows. NOTE: this package doesn't contain a concrete HotPhraseManager implementation; you should add the NHotPhrase.WindowsForms or NHotPhrase.Wpf package to get the top level management for WindForm or Wpf respectively.</Description>
-		<Version>6.0.0</Version>
+		<Version>2025.5.21</Version>
 		<Authors>William Rawls</Authors>
 		<Company>vorzan.com</Company>
-		<AssemblyVersion>6.0.0.0</AssemblyVersion>
+		<AssemblyVersion>2025.5.21.0</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -24,7 +24,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\xlg\MetX\MetX.Standard.Library\MetX.Standard.Library.csproj" />
+	  <PackageReference Include="MetX.Standard.Library" Version="2025.5.19.4" />
+	  <PackageReference Include="MetX.Standard.Strings" Version="2025.5.19.4" />
 	</ItemGroup>
 
+	
 </Project>
